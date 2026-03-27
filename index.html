@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>ФАЙЛЫ ДЮКА — ДОСТУП ОГРАНИЧЕН</title>
+    <title>ФАЙЛЫ ДЮКА — АРХИВ С ПЛЁНОЧНЫМИ ЭФФЕКТАМИ</title>
     <style>
         * {
             margin: 0;
@@ -20,21 +20,106 @@
             align-items: center;
             padding: 2rem 1rem;
             position: relative;
+            overflow-x: hidden;
         }
 
-        body::before {
-            content: "";
+        /* ========== ЭФФЕКТ "РЫБИЙ ГЛАЗ" (FISHEYE) ========== */
+        .fisheye-container {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: repeating-radial-gradient(circle at 20% 30%, rgba(0,0,0,0.2), rgba(0,0,0,0.2) 2px, transparent 2px, transparent 4px);
             pointer-events: none;
-            z-index: 1;
+            z-index: 3;
+            overflow: hidden;
+            border-radius: 0;
+        }
+        
+        .fisheye-lens {
+            position: absolute;
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,255,200,0.08) 0%, rgba(0,0,0,0) 70%);
+            backdrop-filter: blur(2px) brightness(1.1) contrast(1.2);
+            mix-blend-mode: overlay;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            transition: all 0.03s linear;
+            box-shadow: 0 0 30px rgba(255,220,100,0.2), inset 0 0 40px rgba(255,200,100,0.3);
+            border: 1px solid rgba(212, 175, 55, 0.4);
         }
 
-        /* Главный контейнер */
+        /* ========== ЭФФЕКТ ПОМЕХ (АНАЛОГОВЫЙ ШУМ + ПОЛОСЫ) ========== */
+        .noise-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 4;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.08) 0px,
+                rgba(0, 0, 0, 0.08) 2px,
+                transparent 2px,
+                transparent 6px
+            );
+            animation: scanlines 0.2s linear infinite;
+        }
+
+        .static-noise {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 4;
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJmIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iLjciIG51bU9jdGF2ZXM9IjMiLz48L2ZpbHRlcj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWx0ZXI9InVybCgjZikiIG9wYWNpdHk9IjAuMjUiLz48L3N2Zz4=');
+            background-repeat: repeat;
+            background-size: 180px;
+            opacity: 0.12;
+            mix-blend-mode: overlay;
+            animation: flickerNoise 0.12s steps(2) infinite;
+        }
+
+        .vhs-lines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 4;
+            background: linear-gradient(
+                to bottom,
+                transparent 50%,
+                rgba(0, 0, 0, 0.03) 50%
+            );
+            background-size: 100% 4px;
+            animation: vhsScroll 8s linear infinite;
+        }
+
+        @keyframes scanlines {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(4px); }
+        }
+
+        @keyframes flickerNoise {
+            0% { opacity: 0.08; }
+            50% { opacity: 0.18; }
+            100% { opacity: 0.1; }
+        }
+
+        @keyframes vhsScroll {
+            0% { background-position: 0 0; }
+            100% { background-position: 0 20px; }
+        }
+
+        /* основной контейнер — приподнимем над эффектами */
         .dossier {
             max-width: 900px;
             width: 100%;
@@ -45,7 +130,8 @@
             box-shadow: 0 25px 45px rgba(0,0,0,0.6), 0 0 0 2px rgba(210,180,80,0.2) inset, 0 0 0 4px rgba(0,0,0,0.4) inset;
             padding: 1.8rem 2rem;
             transition: all 0.2s;
-            z-index: 2;
+            z-index: 10;
+            position: relative;
         }
 
         .header {
@@ -123,23 +209,51 @@
             gap: 1rem;
         }
 
+        .password-input-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
         .password-input {
             background: #0a0e16;
             border: 2px solid #6a5a3a;
-            padding: 0.8rem 1.5rem;
+            padding: 0.8rem 2.8rem 0.8rem 1.5rem;
             font-size: 1.2rem;
             font-family: monospace;
             color: #ecd67a;
             border-radius: 3rem;
-            width: 250px;
+            width: 280px;
             text-align: center;
             outline: none;
             transition: 0.2s;
+            letter-spacing: 2px;
         }
 
         .password-input:focus {
             border-color: #d4af37;
             box-shadow: 0 0 12px rgba(212, 175, 55, 0.4);
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: #b8a86b;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+        }
+
+        .toggle-password:hover {
+            color: #ecd67a;
+            transform: translateY(-50%) scale(1.1);
         }
 
         .password-btn {
@@ -168,12 +282,94 @@
             min-height: 2rem;
         }
 
-        /* Основной контент (скрыт до ввода пароля) */
+        /* Модальное окно приветствия */
+        .welcome-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .welcome-content {
+            background: linear-gradient(135deg, #1a1f2e, #0f1320);
+            border: 2px solid #d4af37;
+            border-radius: 2rem;
+            padding: 2rem 2.5rem;
+            max-width: 450px;
+            text-align: center;
+            box-shadow: 0 0 50px rgba(212, 175, 55, 0.3);
+            animation: slideUp 0.4s ease;
+        }
+
+        .welcome-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .welcome-text {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #ecd67a;
+            margin-bottom: 0.8rem;
+            font-family: 'Courier New', monospace;
+        }
+
+        .welcome-sub {
+            font-size: 1rem;
+            color: #b8a86b;
+            margin-bottom: 1.8rem;
+            border-top: 1px solid #4a412a;
+            padding-top: 0.8rem;
+        }
+
+        .welcome-btn {
+            background: #d4af37;
+            border: none;
+            color: #0a0f1e;
+            padding: 0.7rem 2rem;
+            border-radius: 3rem;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            font-family: monospace;
+            transition: 0.2s;
+        }
+
+        .welcome-btn:hover {
+            background: #ffdd77;
+            transform: scale(1.02);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Основной контент */
         .main-content {
             display: none;
         }
 
-        /* Таймер */
         .timer-section {
             background: #0b0f18cc;
             border-radius: 1.5rem;
@@ -347,32 +543,58 @@
             .file-name { font-size: 0.95rem; }
             .title-main { font-size: 1.6rem; }
             .timer-number { font-size: 1.2rem; }
+            .password-input { width: 240px; font-size: 1rem; }
+            .welcome-text { font-size: 1.2rem; }
         }
     </style>
 </head>
 <body>
+
+<!-- Эффект "Рыбий глаз" (линза, следующая за мышью) -->
+<div class="fisheye-container">
+    <div class="fisheye-lens" id="fisheyeLens"></div>
+</div>
+
+<!-- Эффекты помех -->
+<div class="noise-overlay"></div>
+<div class="static-noise"></div>
+<div class="vhs-lines"></div>
+
 <div class="dossier" id="app">
     <div class="header">
         <div>
             <div class="title-main">ФАЙЛЫ ДЮКА</div>
-            <div class="sub">▸ АУДИОМАТЕРИАЛЫ ▸ РАСШИРЕНИЕ .MP3 ▸ СОВ. СЕКРЕТНО</div>
+            <div class="sub">▸ АУДИОМАТЕРИАЛЫ ▸ РАСШИРЕНИЕ .MP3 ▸ ПЛЁНОЧНЫЙ АРХИВ</div>
         </div>
         <div class="stamp">ДОПУСК <span style="color:#bca458;">A-1</span> ▲</div>
     </div>
 
-    <!-- Блок отказа в доступе (пока пароль не введен) -->
+    <!-- Блок отказа в доступе -->
     <div id="accessDeniedBlock" class="access-denied">
         <div class="denied-icon">⛔</div>
         <div class="denied-title">В ДОСТУПЕ ОТКАЗАНО</div>
         <div class="denied-message">Для просмотра архивных материалов требуется авторизация</div>
         <div class="password-form">
-            <input type="password" id="passwordInput" class="password-input" placeholder="ВВЕДИТЕ ПАРОЛЬ" autocomplete="off">
+            <div class="password-input-wrapper">
+                <input type="password" id="passwordInput" class="password-input" placeholder="ВВЕДИТЕ ПАРОЛЬ" autocomplete="off">
+                <button type="button" class="toggle-password" id="togglePasswordBtn">👁️</button>
+            </div>
             <button id="unlockBtn" class="password-btn">▶ ПОДТВЕРДИТЬ</button>
             <div id="errorMsg" class="error-msg"></div>
         </div>
     </div>
 
-    <!-- Основной контент (скрыт до разблокировки) -->
+    <!-- Модальное окно приветствия -->
+    <div id="welcomeModal" class="welcome-modal">
+        <div class="welcome-content">
+            <div class="welcome-icon">🌸</div>
+            <div class="welcome-text">Добро пожаловать, Софья Александровна</div>
+            <div class="welcome-sub">доступ к архиву открыт</div>
+            <button class="welcome-btn" id="closeWelcomeBtn">ВОЙТИ В АРХИВ</button>
+        </div>
+    </div>
+
+    <!-- Основной контент -->
     <div id="mainContent" class="main-content">
         <div class="timer-section" id="timerSection">
             <div class="timer-label">⏳ ОТСЧЕТ ДО 1 АПРЕЛЯ ⏳</div>
@@ -396,6 +618,7 @@
                 <span>❌ — не получено</span>
                 <span>✅ — добыто / раскрыто</span>
                 <span>🎵 все файлы имеют расширение .mp3</span>
+                <span>📀 эффекты: рыбий глаз + плёночные помехи</span>
             </div>
             <div>© АУДИОАРХИВ ДЮКА · ДОСТУП ПО СПЕЦКОДУ</div>
         </div>
@@ -403,13 +626,11 @@
 </div>
 
 <script>
-    // ⚡ ПАРОЛЬ ДЛЯ ДОСТУПА (можно изменить)
-    const SECRET_PASSWORD = "СОФЬЯ";
-    
-    // Состояние разблокировки
+    // ========== ПАРОЛЬ И ОСНОВНАЯ ЛОГИКА ==========
+    const SECRET_PASSWORD = "детка";
     let isUnlocked = false;
+    let pendingUnlock = false;
     
-    // Данные файлов
     const FILES_DATA = [
         { id: 0, baseName: "допрос с пристрастием", displayBase: "допрос с пристрастием" },
         { id: 1, baseName: "чистосердечное признание", displayBase: "чистосердечное признание" },
@@ -417,7 +638,7 @@
         { id: 3, baseName: "not gay", displayBase: "not gay" },
         { id: 4, baseName: "black мурин", displayBase: "black мурин" },
         { id: 5, baseName: "chatEVD", displayBase: "chatEVD" },
-        { id: 6, baseName: "8 let strogo", displayBase: "8 let strogo" },
+        { id: 6, baseName: "когда сел за особо тяжкое", displayBase: "когда сел за особо тяжкое" },
         { id: 7, baseName: "rab sistemy", displayBase: "rab sistemy" },
         { id: 8, baseName: "восьмиклассница", displayBase: "восьмиклассница" },
         { id: 9, baseName: "nikogda ne/CVETI!", displayBase: "nikogda ne/CVETI!" },
@@ -426,17 +647,25 @@
     
     const FILE_EXT = ".mp3";
     const STORAGE_KEY = "duke_files_mp3_status";
-    
     let filesCompleted = new Array(11).fill(false);
     
-    // DOM элементы
     const accessDeniedBlock = document.getElementById('accessDeniedBlock');
     const mainContent = document.getElementById('mainContent');
+    const welcomeModal = document.getElementById('welcomeModal');
     const passwordInput = document.getElementById('passwordInput');
     const unlockBtn = document.getElementById('unlockBtn');
     const errorMsg = document.getElementById('errorMsg');
+    const togglePasswordBtn = document.getElementById('togglePasswordBtn');
+    const closeWelcomeBtn = document.getElementById('closeWelcomeBtn');
     
-    // Функции работы с хранилищем
+    // Показать/скрыть пароль
+    let isPasswordVisible = false;
+    togglePasswordBtn.addEventListener('click', () => {
+        isPasswordVisible = !isPasswordVisible;
+        passwordInput.type = isPasswordVisible ? 'text' : 'password';
+        togglePasswordBtn.textContent = isPasswordVisible ? '🙈' : '👁️';
+    });
+    
     function loadState() {
         const saved = localStorage.getItem(STORAGE_KEY);
         if (saved) {
@@ -471,16 +700,10 @@
     function renderList() {
         const container = document.getElementById('filesContainer');
         if (!container) return;
-        
         let completedCount = 0;
-        for (let i = 0; i < filesCompleted.length; i++) {
-            if (filesCompleted[i]) completedCount++;
-        }
-        
+        for (let i = 0; i < filesCompleted.length; i++) if (filesCompleted[i]) completedCount++;
         const counterSpan = document.getElementById('progressCounter');
-        if (counterSpan) {
-            counterSpan.innerHTML = `ЗАКРЫТО: ${completedCount} / 11`;
-        }
+        if (counterSpan) counterSpan.innerHTML = `ЗАКРЫТО: ${completedCount} / 11`;
         
         let html = '';
         for (let i = 0; i < FILES_DATA.length; i++) {
@@ -489,10 +712,7 @@
             const completedClass = isCompleted ? 'completed' : '';
             const statusMark = isCompleted ? '✅' : '❌';
             const idxFormatted = (i+1).toString().padStart(2, '0');
-            
-            let displayBaseName = file.displayBase;
-            const fullFileName = `${displayBaseName}${FILE_EXT}`;
-            
+            const fullFileName = `${file.displayBase}${FILE_EXT}`;
             html += `
                 <div class="file-item ${completedClass}" data-id="${i}">
                     <div class="file-info">
@@ -507,41 +727,29 @@
             `;
         }
         container.innerHTML = html;
-        
         document.querySelectorAll('.toggle-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const idAttr = btn.getAttribute('data-id');
-                if (idAttr !== null) {
-                    const idx = parseInt(idAttr, 10);
-                    if (!isNaN(idx) && idx >= 0 && idx < filesCompleted.length) {
-                        filesCompleted[idx] = !filesCompleted[idx];
-                        saveState();
-                        renderList();
-                    }
+                const idx = parseInt(btn.getAttribute('data-id'), 10);
+                if (!isNaN(idx) && idx >= 0 && idx < filesCompleted.length) {
+                    filesCompleted[idx] = !filesCompleted[idx];
+                    saveState();
+                    renderList();
                 }
             });
         });
     }
     
     function resetAll() {
-        for (let i = 0; i < filesCompleted.length; i++) {
-            filesCompleted[i] = false;
-        }
+        for (let i = 0; i < filesCompleted.length; i++) filesCompleted[i] = false;
         saveState();
         renderList();
     }
     
-    // Таймер до 1 апреля
     function updateAprilTimer() {
         const now = new Date();
         let targetYear = now.getFullYear();
         let targetDate = new Date(targetYear, 3, 1);
-        
-        if (now > targetDate) {
-            targetDate = new Date(targetYear + 1, 3, 1);
-        }
-        
+        if (now > targetDate) targetDate = new Date(targetYear + 1, 3, 1);
         const diffMs = targetDate - now;
         if (diffMs <= 0) {
             document.getElementById('days').innerText = '00';
@@ -552,31 +760,17 @@
             if (statusDiv) statusDiv.innerHTML = '🎉 1 АПРЕЛЯ! ВРЕМЯ РАСПЕЧАТАТЬ АРХИВ 🎉';
             return;
         }
-        
         const totalSeconds = Math.floor(diffMs / 1000);
-        const days = Math.floor(totalSeconds / 86400);
-        const hours = Math.floor((totalSeconds % 86400) / 3600);
-        const minutes = Math.floor((totalSeconds % 3600) / 60);
-        const seconds = totalSeconds % 60;
-        
-        document.getElementById('days').innerText = days.toString().padStart(2, '0');
-        document.getElementById('hours').innerText = hours.toString().padStart(2, '0');
-        document.getElementById('minutes').innerText = minutes.toString().padStart(2, '0');
-        document.getElementById('seconds').innerText = seconds.toString().padStart(2, '0');
-        
+        document.getElementById('days').innerText = Math.floor(totalSeconds / 86400).toString().padStart(2, '0');
+        document.getElementById('hours').innerText = Math.floor((totalSeconds % 86400) / 3600).toString().padStart(2, '0');
+        document.getElementById('minutes').innerText = Math.floor((totalSeconds % 3600) / 60).toString().padStart(2, '0');
+        document.getElementById('seconds').innerText = (totalSeconds % 60).toString().padStart(2, '0');
         const statusDiv = document.getElementById('timerStatus');
         if (statusDiv) {
-            if (days === 0 && hours === 0 && minutes < 30) {
-                statusDiv.innerHTML = '⚠️ МЕНЕЕ 30 МИНУТ ДО 1 АПРЕЛЯ! ⚠️';
-            } else if (days === 0 && hours < 1) {
-                statusDiv.innerHTML = '🔥 МЕНЕЕ ЧАСА ДО 1 АПРЕЛЯ! 🔥';
-            } else if (days === 0) {
-                statusDiv.innerHTML = '⏰ СЕГОДНЯ 1 АПРЕЛЯ? ПОКА НЕТ, НО СКОРО ⏰';
-            } else if (days < 3) {
-                statusDiv.innerHTML = '📼 ВСЕГО НЕСКОЛЬКО ДНЕЙ ДО ПРАВДЫ 📼';
-            } else {
-                statusDiv.innerHTML = '🎧 ОТСЧЕТ ДО 1 АПРЕЛЯ — КАЖДЫЙ ФАЙЛ .MP3 ЖДЕТ СВОЕГО ЧАСА 🎧';
-            }
+            const daysLeft = Math.floor(totalSeconds / 86400);
+            if (daysLeft === 0) statusDiv.innerHTML = '🔥 МЕНЕЕ СУТОК ДО 1 АПРЕЛЯ! 🔥';
+            else if (daysLeft < 3) statusDiv.innerHTML = '📼 ВСЕГО НЕСКОЛЬКО ДНЕЙ ДО АПРЕЛЬСКОГО РИТУАЛА 📼';
+            else statusDiv.innerHTML = '🎧 ОТСЧЕТ ДО 1 АПРЕЛЯ — КАЖДЫЙ ФАЙЛ .MP3 ЖДЕТ СВОЕГО ЧАСА 🎧';
         }
     }
     
@@ -587,52 +781,31 @@
         timerInterval = setInterval(updateAprilTimer, 1000);
     }
     
-    // Разблокировка контента
-    function unlockContent() {
+    function executeUnlock() {
         isUnlocked = true;
         accessDeniedBlock.style.display = 'none';
         mainContent.style.display = 'block';
-        
-        // Загружаем данные и запускаем всё
         loadState();
         renderList();
         startAprilTimer();
-        
         const resetBtn = document.getElementById('resetAllBtn');
-        if (resetBtn) {
-            resetBtn.addEventListener('click', () => {
-                if (confirm('⚠️ СБРОСИТЬ ВСЕ ОТМЕТКИ? Все файлы .mp3 снова станут недоступны для прослушки (статус ❌)')) {
-                    resetAll();
-                }
-            });
-        }
-        
-        // Декоративный эффект
-        setInterval(() => {
-            const timerSection = document.getElementById('timerSection');
-            if (timerSection) {
-                const now = new Date();
-                const targetNext = new Date(now.getFullYear(), 3, 1);
-                let diff = targetNext - now;
-                if (diff < 0) diff = new Date(now.getFullYear() + 1, 3, 1) - now;
-                const hoursLeft = diff / (1000 * 3600);
-                if (hoursLeft < 24 && hoursLeft > 0) {
-                    timerSection.style.border = "1px solid #ffaa44";
-                    timerSection.style.boxShadow = "0 0 6px rgba(255,170,68,0.5)";
-                } else {
-                    timerSection.style.border = "1px solid #5f5333";
-                    timerSection.style.boxShadow = "none";
-                }
-            }
-        }, 2000);
+        if (resetBtn) resetBtn.addEventListener('click', () => { if (confirm('⚠️ СБРОСИТЬ ВСЕ ОТМЕТКИ?')) resetAll(); });
     }
     
-    // Проверка пароля
+    function showWelcomeAndUnlock() {
+        welcomeModal.style.display = 'flex';
+        pendingUnlock = true;
+    }
+    
+    function closeWelcomeAndUnlock() {
+        if (pendingUnlock) { executeUnlock(); pendingUnlock = false; }
+        welcomeModal.style.display = 'none';
+    }
+    
     function checkPassword() {
-        const enteredPassword = passwordInput.value.trim();
-        if (enteredPassword === SECRET_PASSWORD) {
+        if (passwordInput.value.trim() === SECRET_PASSWORD) {
             errorMsg.innerText = "";
-            unlockContent();
+            showWelcomeAndUnlock();
         } else {
             errorMsg.innerText = "❌ НЕВЕРНЫЙ ПАРОЛЬ. ДОСТУП ЗАПРЕЩЕН.";
             passwordInput.value = "";
@@ -640,18 +813,37 @@
         }
     }
     
-    // Обработчики
+    closeWelcomeBtn.addEventListener('click', closeWelcomeAndUnlock);
+    welcomeModal.addEventListener('click', (e) => { if (e.target === welcomeModal) closeWelcomeAndUnlock(); });
     unlockBtn.addEventListener('click', checkPassword);
-    passwordInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-            checkPassword();
+    passwordInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') checkPassword(); });
+    
+    accessDeniedBlock.style.display = 'block';
+    mainContent.style.display = 'none';
+    welcomeModal.style.display = 'none';
+    
+    // ========== ЭФФЕКТ "РЫБИЙ ГЛАЗ" ==========
+    const lens = document.getElementById('fisheyeLens');
+    document.addEventListener('mousemove', (e) => {
+        if (lens) {
+            const x = e.clientX;
+            const y = e.clientY;
+            lens.style.left = x + 'px';
+            lens.style.top = y + 'px';
+            // Добавляем легкую пульсацию при движении
+            lens.style.transform = `translate(-50%, -50%) scale(${1 + Math.sin(Date.now() * 0.008) * 0.03})`;
         }
     });
     
-    // При загрузке проверяем, не разблокирован ли уже (по localStorage можно сделать "сессию", но по ТЗ нужно при каждом входе)
-    // Для безопасности всегда показываем форму входа
-    accessDeniedBlock.style.display = 'block';
-    mainContent.style.display = 'none';
+    // Небольшой дополнительный эффект: линза слегка меняет размер от скролла
+    window.addEventListener('wheel', () => {
+        if (lens) {
+            lens.style.transform = `translate(-50%, -50%) scale(1.12)`;
+            setTimeout(() => {
+                if (lens) lens.style.transform = `translate(-50%, -50%) scale(1)`;
+            }, 150);
+        }
+    });
 </script>
 </body>
 </html>
