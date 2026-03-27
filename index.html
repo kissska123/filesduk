@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>ФАЙЛЫ ДЮКА — АРХИВ С ПЛЁНОЧНЫМИ ЭФФЕКТАМИ</title>
+    <title>ФАЙЛЫ ДЮКА — СТАРЫЙ ТЕЛЕВИЗОР</title>
     <style>
         * {
             margin: 0;
@@ -12,125 +12,229 @@
         }
 
         body {
-            background: radial-gradient(circle at 20% 30%, #0a0f1e, #03060c);
+            background: #000;
             font-family: 'Courier New', 'Fira Code', 'Source Code Pro', monospace;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 2rem 1rem;
+            padding: 2rem;
             position: relative;
             overflow-x: hidden;
         }
 
-        /* ========== ЭФФЕКТ "РЫБИЙ ГЛАЗ" (FISHEYE) ========== */
-        .fisheye-container {
-            position: fixed;
-            top: 0;
-            left: 0;
+        /* ========== ОБВЕРТКА ДЛЯ ЭФФЕКТА СТАРОГО ТЕЛЕВИЗОРА ========== */
+        .tv-wrapper {
+            position: relative;
             width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 3;
-            overflow: hidden;
-            border-radius: 0;
-        }
-        
-        .fisheye-lens {
-            position: absolute;
-            width: 280px;
-            height: 280px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(255,255,200,0.08) 0%, rgba(0,0,0,0) 70%);
-            backdrop-filter: blur(2px) brightness(1.1) contrast(1.2);
-            mix-blend-mode: overlay;
-            pointer-events: none;
-            transform: translate(-50%, -50%);
-            transition: all 0.03s linear;
-            box-shadow: 0 0 30px rgba(255,220,100,0.2), inset 0 0 40px rgba(255,200,100,0.3);
-            border: 1px solid rgba(212, 175, 55, 0.4);
+            max-width: 1100px;
+            margin: 0 auto;
         }
 
-        /* ========== ЭФФЕКТ ПОМЕХ (АНАЛОГОВЫЙ ШУМ + ПОЛОСЫ) ========== */
-        .noise-overlay {
-            position: fixed;
+        /* ЭКРАН С ЭФФЕКТОМ "БОЧКА" (FISHEYE / BARREL DISTORTION) */
+        .tv-screen {
+            position: relative;
+            background: #000;
+            border-radius: 60px / 40px;
+            overflow: hidden;
+            box-shadow: 
+                0 0 0 8px #2a2418,
+                0 0 0 12px #1a150e,
+                0 0 0 20px #0c0a06,
+                0 20px 40px rgba(0,0,0,0.8),
+                inset 0 0 50px rgba(0,0,0,0.5);
+            transform: scale(1);
+            transition: all 0.2s;
+        }
+
+        /* ИСКРИВЛЕНИЕ "РЫБИЙ ГЛАЗ" — через перспективу и трансформацию */
+        .tv-content {
+            position: relative;
+            width: 100%;
+            padding: 2rem;
+            background: radial-gradient(ellipse at center, #0a0f1e 0%, #03060c 100%);
+            transform: scale(1.02);
+            transform-origin: center center;
+            animation: barrelPulse 4s ease-in-out infinite;
+            will-change: transform;
+        }
+
+        /* Основное искажение — эффект пузатого экрана */
+        @keyframes barrelPulse {
+            0% {
+                transform: scale(1.02) perspective(800px) rotateX(0deg) rotateY(0deg);
+                filter: brightness(1) contrast(1.05);
+            }
+            50% {
+                transform: scale(1.03) perspective(800px) rotateX(0.5deg) rotateY(0.3deg);
+                filter: brightness(1.02) contrast(1.08);
+            }
+            100% {
+                transform: scale(1.02) perspective(800px) rotateX(0deg) rotateY(0deg);
+                filter: brightness(1) contrast(1.05);
+            }
+        }
+
+        /* Дополнительная деформация краёв (линза) */
+        .tv-content::before {
+            content: "";
+            position: absolute;
+            top: -5%;
+            left: -5%;
+            width: 110%;
+            height: 110%;
+            background: radial-gradient(circle at 50% 50%, transparent 60%, rgba(0,0,0,0.6) 100%);
+            pointer-events: none;
+            z-index: 5;
+            mix-blend-mode: multiply;
+        }
+
+        /* Эффект старых ЭЛТ-телевизоров — свечение по углам и растяжка */
+        .tv-content::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.4) 100%);
+            pointer-events: none;
+            z-index: 4;
+        }
+
+        /* АНАЛОГОВЫЕ ПОМЕХИ — ВЕРТИКАЛЬНЫЕ ПОЛОСЫ, ШУМ, БИЕНИЕ */
+        .interference {
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             pointer-events: none;
-            z-index: 4;
+            z-index: 10;
+            mix-blend-mode: overlay;
+        }
+
+        /* Стробоскопический шум (зерно) */
+        .grain {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDAiIGhlaWdodD0iNDAwIj48ZmlsdGVyIGlkPSJmIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iLjUiIG51bU9jdGF2ZXM9IjMiLz48L2ZpbHRlcj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWx0ZXI9InVybCgjZikiIG9wYWNpdHk9IjAuMjUiLz48L3N2Zz4=');
+            background-repeat: repeat;
+            background-size: 120px;
+            opacity: 0.2;
+            animation: grainShift 0.2s steps(2) infinite;
+        }
+
+        @keyframes grainShift {
+            0% { opacity: 0.15; transform: translate(0, 0); }
+            100% { opacity: 0.25; transform: translate(1%, 1%); }
+        }
+
+        /* Горизонтальные линии развертки (scanlines) */
+        .scanlines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             background: repeating-linear-gradient(
                 0deg,
-                rgba(0, 0, 0, 0.08) 0px,
-                rgba(0, 0, 0, 0.08) 2px,
+                rgba(0, 0, 0, 0.2) 0px,
+                rgba(0, 0, 0, 0.2) 2px,
                 transparent 2px,
-                transparent 6px
+                transparent 4px
             );
-            animation: scanlines 0.2s linear infinite;
-        }
-
-        .static-noise {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
             pointer-events: none;
-            z-index: 4;
-            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJmIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iLjciIG51bU9jdGF2ZXM9IjMiLz48L2ZpbHRlcj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWx0ZXI9InVybCgjZikiIG9wYWNpdHk9IjAuMjUiLz48L3N2Zz4=');
-            background-repeat: repeat;
-            background-size: 180px;
-            opacity: 0.12;
-            mix-blend-mode: overlay;
-            animation: flickerNoise 0.12s steps(2) infinite;
+            animation: scanMove 0.12s linear infinite;
         }
 
-        .vhs-lines {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 4;
-            background: linear-gradient(
-                to bottom,
-                transparent 50%,
-                rgba(0, 0, 0, 0.03) 50%
-            );
-            background-size: 100% 4px;
-            animation: vhsScroll 8s linear infinite;
-        }
-
-        @keyframes scanlines {
+        @keyframes scanMove {
             0% { transform: translateY(0); }
-            100% { transform: translateY(4px); }
+            100% { transform: translateY(2px); }
         }
 
-        @keyframes flickerNoise {
-            0% { opacity: 0.08; }
-            50% { opacity: 0.18; }
-            100% { opacity: 0.1; }
+        /* "Плавающая" рябь (эффект нагретого кинескопа) */
+        .wobble {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                90deg,
+                rgba(255, 200, 100, 0.02) 0px,
+                rgba(255, 200, 100, 0.02) 2px,
+                transparent 2px,
+                transparent 8px
+            );
+            animation: wobbleEffect 0.25s ease-in-out infinite alternate;
+            pointer-events: none;
         }
 
-        @keyframes vhsScroll {
-            0% { background-position: 0 0; }
-            100% { background-position: 0 20px; }
+        @keyframes wobbleEffect {
+            0% { transform: skewX(0deg) scaleX(1); opacity: 0.2; }
+            100% { transform: skewX(0.3deg) scaleX(1.002); opacity: 0.4; }
         }
 
-        /* основной контейнер — приподнимем над эффектами */
+        /* Блик на стекле телевизора (отражение) */
+        .tv-glare {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at 30% 20%, rgba(255,255,220,0.08) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 12;
+            mix-blend-mode: screen;
+        }
+
+        /* "Горящие" пиксели по краям (vignette + цветное свечение) */
+        .vignette {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            box-shadow: inset 0 0 80px rgba(0,0,0,0.7), inset 0 0 30px rgba(0,0,0,0.5);
+            pointer-events: none;
+            z-index: 11;
+            border-radius: 60px / 40px;
+        }
+
+        /* Хроматическая аберрация (размытие цветов по краям) */
+        .chromatic {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 50%, transparent 60%, rgba(255,0,0,0.08) 80%, rgba(0,0,255,0.08) 95%);
+            mix-blend-mode: screen;
+            pointer-events: none;
+            z-index: 9;
+            animation: chromaShift 3s infinite alternate;
+        }
+
+        @keyframes chromaShift {
+            0% { opacity: 0.3; transform: scale(1); }
+            100% { opacity: 0.6; transform: scale(1.01); }
+        }
+
+        /* Основной контентный блок */
         .dossier {
-            max-width: 900px;
             width: 100%;
             background: rgba(8, 12, 20, 0.85);
-            backdrop-filter: blur(4px);
+            backdrop-filter: blur(2px);
             border: 1px solid rgba(210, 180, 80, 0.5);
-            border-radius: 2rem;
-            box-shadow: 0 25px 45px rgba(0,0,0,0.6), 0 0 0 2px rgba(210,180,80,0.2) inset, 0 0 0 4px rgba(0,0,0,0.4) inset;
+            border-radius: 1.5rem;
+            box-shadow: 0 0 40px rgba(0,0,0,0.5);
             padding: 1.8rem 2rem;
             transition: all 0.2s;
-            z-index: 10;
+            z-index: 20;
             position: relative;
         }
 
@@ -150,7 +254,7 @@
             font-weight: bold;
             letter-spacing: 4px;
             color: #ecd67a;
-            text-shadow: 0 0 5px #a57c1c, 0 2px 0 #2c2412;
+            text-shadow: 0 0 8px #a57c1c, 0 2px 0 #2c2412;
         }
 
         .stamp {
@@ -161,59 +265,25 @@
             color: #d4af37;
             border: 1px solid #b48c2c;
             font-weight: bold;
-            text-transform: uppercase;
         }
 
         .sub {
             font-size: 0.75rem;
             color: #9b8e5f;
             margin-top: 0.3rem;
-            display: flex;
-            justify-content: space-between;
             font-family: monospace;
         }
 
-        /* Блок отказа в доступе */
         .access-denied {
             text-align: center;
             padding: 3rem 1rem;
         }
 
-        .denied-icon {
-            font-size: 5rem;
-            margin-bottom: 1rem;
-            filter: drop-shadow(0 0 8px rgba(255, 0, 0, 0.5));
-        }
+        .denied-icon { font-size: 5rem; margin-bottom: 1rem; filter: drop-shadow(0 0 8px rgba(255, 0, 0, 0.5)); }
+        .denied-title { font-size: 2rem; font-weight: bold; color: #c44; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 1.5rem; }
+        .denied-message { font-size: 1rem; color: #aa8866; margin-bottom: 2rem; }
 
-        .denied-title {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #c44;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            margin-bottom: 1.5rem;
-            text-shadow: 0 0 5px rgba(200, 0, 0, 0.5);
-        }
-
-        .denied-message {
-            font-size: 1rem;
-            color: #aa8866;
-            margin-bottom: 2rem;
-            font-family: monospace;
-        }
-
-        .password-form {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .password-input-wrapper {
-            position: relative;
-            display: inline-block;
-        }
-
+        .password-input-wrapper { position: relative; display: inline-block; }
         .password-input {
             background: #0a0e16;
             border: 2px solid #6a5a3a;
@@ -225,625 +295,263 @@
             width: 280px;
             text-align: center;
             outline: none;
-            transition: 0.2s;
-            letter-spacing: 2px;
         }
-
-        .password-input:focus {
-            border-color: #d4af37;
-            box-shadow: 0 0 12px rgba(212, 175, 55, 0.4);
-        }
-
         .toggle-password {
-            position: absolute;
-            right: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 1.2rem;
-            color: #b8a86b;
-            padding: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: 0.2s;
+            position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+            background: none; border: none; cursor: pointer; font-size: 1.2rem; color: #b8a86b;
         }
-
-        .toggle-password:hover {
-            color: #ecd67a;
-            transform: translateY(-50%) scale(1.1);
-        }
-
         .password-btn {
-            background: #2e2a22;
-            border: 1px solid #b98f40;
-            color: #ffdd99;
-            padding: 0.6rem 2rem;
-            border-radius: 3rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.2s;
-            font-family: monospace;
-            font-size: 1rem;
+            background: #2e2a22; border: 1px solid #b98f40; color: #ffdd99;
+            padding: 0.6rem 2rem; border-radius: 3rem; cursor: pointer;
+            font-family: monospace; font-size: 1rem;
         }
+        .error-msg { color: #ff8866; font-size: 0.8rem; margin-top: 0.5rem; }
 
-        .password-btn:hover {
-            background: #5a431f;
-            color: white;
-            border-color: #e6bc6e;
-        }
-
-        .error-msg {
-            color: #ff8866;
-            font-size: 0.8rem;
-            margin-top: 0.5rem;
-            min-height: 2rem;
-        }
-
-        /* Модальное окно приветствия */
         .welcome-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(8px);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-            animation: fadeIn 0.3s ease;
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); backdrop-filter: blur(8px); z-index: 1000;
+            justify-content: center; align-items: center;
         }
-
         .welcome-content {
             background: linear-gradient(135deg, #1a1f2e, #0f1320);
-            border: 2px solid #d4af37;
-            border-radius: 2rem;
-            padding: 2rem 2.5rem;
-            max-width: 450px;
-            text-align: center;
-            box-shadow: 0 0 50px rgba(212, 175, 55, 0.3);
-            animation: slideUp 0.4s ease;
+            border: 2px solid #d4af37; border-radius: 2rem; padding: 2rem; text-align: center;
         }
+        .welcome-text { font-size: 1.6rem; font-weight: bold; color: #ecd67a; margin-bottom: 0.8rem; }
+        .welcome-btn { background: #d4af37; border: none; padding: 0.7rem 2rem; border-radius: 3rem; cursor: pointer; }
 
-        .welcome-icon {
-            font-size: 4rem;
-            margin-bottom: 1rem;
-        }
-
-        .welcome-text {
-            font-size: 1.6rem;
-            font-weight: bold;
-            color: #ecd67a;
-            margin-bottom: 0.8rem;
-            font-family: 'Courier New', monospace;
-        }
-
-        .welcome-sub {
-            font-size: 1rem;
-            color: #b8a86b;
-            margin-bottom: 1.8rem;
-            border-top: 1px solid #4a412a;
-            padding-top: 0.8rem;
-        }
-
-        .welcome-btn {
-            background: #d4af37;
-            border: none;
-            color: #0a0f1e;
-            padding: 0.7rem 2rem;
-            border-radius: 3rem;
-            font-weight: bold;
-            font-size: 1rem;
-            cursor: pointer;
-            font-family: monospace;
-            transition: 0.2s;
-        }
-
-        .welcome-btn:hover {
-            background: #ffdd77;
-            transform: scale(1.02);
-            box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Основной контент */
-        .main-content {
-            display: none;
-        }
-
+        .main-content { display: none; }
         .timer-section {
-            background: #0b0f18cc;
-            border-radius: 1.5rem;
-            padding: 0.8rem 1.2rem;
-            margin-bottom: 1.8rem;
-            border: 1px solid #5f5333;
-            text-align: center;
+            background: #0b0f18cc; border-radius: 1.5rem; padding: 0.8rem 1.2rem;
+            margin-bottom: 1.8rem; border: 1px solid #5f5333; text-align: center;
         }
-
-        .timer-label {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: #b8a86b;
-            margin-bottom: 0.3rem;
-        }
-
-        .timer-display {
-            display: flex;
-            justify-content: center;
-            gap: 1.2rem;
-            flex-wrap: wrap;
-        }
-
-        .timer-block {
-            background: #00000066;
-            padding: 0.3rem 0.8rem;
-            border-radius: 1rem;
-            min-width: 70px;
-        }
-
-        .timer-number {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: #f2dd9f;
-            line-height: 1;
-        }
-
-        .timer-unit {
-            font-size: 0.65rem;
-            color: #bba86b;
-        }
-
-        .timer-status {
-            font-size: 0.8rem;
-            margin-top: 0.5rem;
-            color: #e0c87c;
-        }
-
-        .files-list {
-            display: flex;
-            flex-direction: column;
-            gap: 0.9rem;
-            margin: 1.5rem 0;
-        }
-
+        .timer-display { display: flex; justify-content: center; gap: 1.2rem; flex-wrap: wrap; }
+        .timer-block { background: #00000066; padding: 0.3rem 0.8rem; border-radius: 1rem; min-width: 70px; }
+        .timer-number { font-size: 1.8rem; font-weight: bold; color: #f2dd9f; }
+        .timer-unit { font-size: 0.65rem; color: #bba86b; }
+        .files-list { display: flex; flex-direction: column; gap: 0.9rem; margin: 1.5rem 0; }
         .file-item {
-            background: rgba(0, 0, 0, 0.55);
-            border-left: 6px solid #b8860b;
-            border-radius: 1rem;
-            padding: 0.7rem 1.2rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 1rem;
+            background: rgba(0, 0, 0, 0.55); border-left: 6px solid #b8860b;
+            border-radius: 1rem; padding: 0.7rem 1.2rem;
+            display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem;
         }
-
-        .file-item.completed {
-            border-left-color: #2c9c4a;
-            background: rgba(20, 35, 25, 0.7);
-        }
-
-        .file-info {
-            display: flex;
-            align-items: baseline;
-            gap: 0.8rem;
-            flex-wrap: wrap;
-        }
-
-        .file-index {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #c2a144;
-            min-width: 2rem;
-        }
-
-        .file-name {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: #ebddb0;
-            word-break: break-all;
-        }
-
-        .status-badge {
-            font-size: 1.2rem;
-            background: #231f1a;
-            padding: 0.2rem 0.8rem;
-            border-radius: 40px;
-        }
-
-        .completed .status-badge {
-            background: #1f4529;
-            color: #a5f0b0;
-        }
-
+        .file-item.completed { border-left-color: #2c9c4a; background: rgba(20, 35, 25, 0.7); }
+        .file-info { display: flex; align-items: baseline; gap: 0.8rem; }
+        .file-index { font-size: 1.5rem; font-weight: bold; color: #c2a144; }
+        .file-name { font-size: 1.2rem; font-weight: 600; color: #ebddb0; }
+        .status-badge { font-size: 1.2rem; background: #231f1a; padding: 0.2rem 0.8rem; border-radius: 40px; }
+        .completed .status-badge { background: #1f4529; color: #a5f0b0; }
         .toggle-btn {
-            background: #2e2a22;
-            border: none;
-            color: #f0cf7a;
-            font-size: 1.4rem;
-            padding: 0.3rem 1rem;
-            border-radius: 2rem;
-            cursor: pointer;
-            font-family: monospace;
+            background: #2e2a22; border: none; color: #f0cf7a; font-size: 1.4rem;
+            padding: 0.3rem 1rem; border-radius: 2rem; cursor: pointer;
         }
-
-        .toggle-btn:hover {
-            background: #4f3e22;
-        }
-
         .stats-panel {
-            background: #0b0e16b3;
-            border-radius: 1.5rem;
-            padding: 1rem 1.5rem;
-            margin-top: 1.2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-            border: 1px solid #4a412a;
+            background: #0b0e16b3; border-radius: 1.5rem; padding: 1rem 1.5rem;
+            margin-top: 1.2rem; display: flex; justify-content: space-between; flex-wrap: wrap;
         }
+        .counter { font-size: 1.2rem; background: #00000066; padding: 0.4rem 1rem; border-radius: 2rem; color: #f2df9e; }
+        .reset-btn { background: #2c2418; border: 1px solid #b98f40; color: #ffdd99; padding: 0.5rem 1.2rem; border-radius: 2rem; cursor: pointer; }
+        .footer-note { margin-top: 1.6rem; font-size: 0.7rem; text-align: center; color: #7c6f46; border-top: 1px dashed #4e462e; padding-top: 1rem; }
+        .legend { display: flex; justify-content: center; gap: 1.2rem; margin-bottom: 0.3rem; }
 
-        .counter {
-            font-size: 1.2rem;
-            background: #00000066;
-            padding: 0.4rem 1rem;
-            border-radius: 2rem;
-            color: #f2df9e;
-        }
-
-        .reset-btn {
-            background: #2c2418;
-            border: 1px solid #b98f40;
-            color: #ffdd99;
-            padding: 0.5rem 1.2rem;
-            border-radius: 2rem;
-            cursor: pointer;
-            font-family: monospace;
-        }
-
-        .footer-note {
-            margin-top: 1.6rem;
-            font-size: 0.7rem;
-            text-align: center;
-            color: #7c6f46;
-            border-top: 1px dashed #4e462e;
-            padding-top: 1rem;
-        }
-
-        .legend {
-            display: flex;
-            justify-content: center;
-            gap: 1.2rem;
-            margin-bottom: 0.3rem;
-        }
-
-        @media (max-width: 580px) {
-            .dossier { padding: 1.2rem; }
-            .file-name { font-size: 0.95rem; }
-            .title-main { font-size: 1.6rem; }
-            .timer-number { font-size: 1.2rem; }
-            .password-input { width: 240px; font-size: 1rem; }
-            .welcome-text { font-size: 1.2rem; }
+        @media (max-width: 680px) {
+            .tv-content { padding: 1rem; }
+            .title-main { font-size: 1.5rem; }
+            .file-name { font-size: 0.85rem; }
         }
     </style>
 </head>
 <body>
+<div class="tv-wrapper">
+    <div class="tv-screen">
+        <div class="tv-content">
+            <div class="dossier" id="app">
+                <div class="header">
+                    <div>
+                        <div class="title-main">ФАЙЛЫ ДЮКА</div>
+                        <div class="sub">▸ АУДИОМАТЕРИАЛЫ ▸ РАСШИРЕНИЕ .MP3 ▸ ЭЛТ-АРХИВ</div>
+                    </div>
+                    <div class="stamp">ДОПУСК A-1 ▲</div>
+                </div>
 
-<!-- Эффект "Рыбий глаз" (линза, следующая за мышью) -->
-<div class="fisheye-container">
-    <div class="fisheye-lens" id="fisheyeLens"></div>
-</div>
+                <div id="accessDeniedBlock" class="access-denied">
+                    <div class="denied-icon">⛔</div>
+                    <div class="denied-title">В ДОСТУПЕ ОТКАЗАНО</div>
+                    <div class="denied-message">Для просмотра архивных материалов требуется авторизация</div>
+                    <div class="password-form">
+                        <div class="password-input-wrapper">
+                            <input type="password" id="passwordInput" class="password-input" placeholder="ВВЕДИТЕ ПАРОЛЬ" autocomplete="off">
+                            <button type="button" class="toggle-password" id="togglePasswordBtn">👁️</button>
+                        </div>
+                        <button id="unlockBtn" class="password-btn">▶ ПОДТВЕРДИТЬ</button>
+                        <div id="errorMsg" class="error-msg"></div>
+                    </div>
+                </div>
 
-<!-- Эффекты помех -->
-<div class="noise-overlay"></div>
-<div class="static-noise"></div>
-<div class="vhs-lines"></div>
+                <div id="welcomeModal" class="welcome-modal">
+                    <div class="welcome-content">
+                        <div class="welcome-icon">📺</div>
+                        <div class="welcome-text">Добро пожаловать, Софья Александровна</div>
+                        <div class="welcome-sub">доступ к архиву открыт</div>
+                        <button class="welcome-btn" id="closeWelcomeBtn">ВОЙТИ В АРХИВ</button>
+                    </div>
+                </div>
 
-<div class="dossier" id="app">
-    <div class="header">
-        <div>
-            <div class="title-main">ФАЙЛЫ ДЮКА</div>
-            <div class="sub">▸ АУДИОМАТЕРИАЛЫ ▸ РАСШИРЕНИЕ .MP3 ▸ ПЛЁНОЧНЫЙ АРХИВ</div>
-        </div>
-        <div class="stamp">ДОПУСК <span style="color:#bca458;">A-1</span> ▲</div>
-    </div>
-
-    <!-- Блок отказа в доступе -->
-    <div id="accessDeniedBlock" class="access-denied">
-        <div class="denied-icon">⛔</div>
-        <div class="denied-title">В ДОСТУПЕ ОТКАЗАНО</div>
-        <div class="denied-message">Для просмотра архивных материалов требуется авторизация</div>
-        <div class="password-form">
-            <div class="password-input-wrapper">
-                <input type="password" id="passwordInput" class="password-input" placeholder="ВВЕДИТЕ ПАРОЛЬ" autocomplete="off">
-                <button type="button" class="toggle-password" id="togglePasswordBtn">👁️</button>
+                <div id="mainContent" class="main-content">
+                    <div class="timer-section">
+                        <div class="timer-label">⏳ ОТСЧЕТ ДО 1 АПРЕЛЯ ⏳</div>
+                        <div class="timer-display" id="timerDisplay">
+                            <div class="timer-block"><div class="timer-number" id="days">00</div><div class="timer-unit">ДНЕЙ</div></div>
+                            <div class="timer-block"><div class="timer-number" id="hours">00</div><div class="timer-unit">ЧАСОВ</div></div>
+                            <div class="timer-block"><div class="timer-number" id="minutes">00</div><div class="timer-unit">МИНУТ</div></div>
+                            <div class="timer-block"><div class="timer-number" id="seconds">00</div><div class="timer-unit">СЕКУНД</div></div>
+                        </div>
+                        <div class="timer-status" id="timerStatus">⚡ АРХИВ РАЗБЛОКИРОВАН ⚡</div>
+                    </div>
+                    <div class="files-list" id="filesContainer"></div>
+                    <div class="stats-panel">
+                        <div class="counter" id="progressCounter">ЗАКРЫТО: 0 / 11</div>
+                        <button class="reset-btn" id="resetAllBtn">⟳ СБРОСИТЬ ВСЕ МЕТКИ</button>
+                    </div>
+                    <div class="footer-note">
+                        <div class="legend">
+                            <span>❌ — не получено</span><span>✅ — добыто</span><span>🎵 .mp3</span><span>📺 ЭЛТ-ЭФФЕКТ</span>
+                        </div>
+                        <div>© АУДИОАРХИВ ДЮКА</div>
+                    </div>
+                </div>
             </div>
-            <button id="unlockBtn" class="password-btn">▶ ПОДТВЕРДИТЬ</button>
-            <div id="errorMsg" class="error-msg"></div>
         </div>
-    </div>
-
-    <!-- Модальное окно приветствия -->
-    <div id="welcomeModal" class="welcome-modal">
-        <div class="welcome-content">
-            <div class="welcome-icon">🌸</div>
-            <div class="welcome-text">Добро пожаловать, Софья Александровна</div>
-            <div class="welcome-sub">доступ к архиву открыт</div>
-            <button class="welcome-btn" id="closeWelcomeBtn">ВОЙТИ В АРХИВ</button>
+        <!-- СЛОИ ЭФФЕКТОВ СТАРОГО ТВ -->
+        <div class="interference">
+            <div class="grain"></div>
+            <div class="scanlines"></div>
+            <div class="wobble"></div>
         </div>
-    </div>
-
-    <!-- Основной контент -->
-    <div id="mainContent" class="main-content">
-        <div class="timer-section" id="timerSection">
-            <div class="timer-label">⏳ ОТСЧЕТ ДО 1 АПРЕЛЯ ⏳</div>
-            <div class="timer-display" id="timerDisplay">
-                <div class="timer-block"><div class="timer-number" id="days">00</div><div class="timer-unit">ДНЕЙ</div></div>
-                <div class="timer-block"><div class="timer-number" id="hours">00</div><div class="timer-unit">ЧАСОВ</div></div>
-                <div class="timer-block"><div class="timer-number" id="minutes">00</div><div class="timer-unit">МИНУТ</div></div>
-                <div class="timer-block"><div class="timer-number" id="seconds">00</div><div class="timer-unit">СЕКУНД</div></div>
-            </div>
-            <div class="timer-status" id="timerStatus">⚡ АРХИВ РАЗБЛОКИРОВАН ⚡</div>
-        </div>
-
-        <div class="files-list" id="filesContainer"></div>
-
-        <div class="stats-panel">
-            <div class="counter" id="progressCounter">ЗАКРЫТО: 0 / 11</div>
-            <button class="reset-btn" id="resetAllBtn">⟳ СБРОСИТЬ ВСЕ МЕТКИ</button>
-        </div>
-        <div class="footer-note">
-            <div class="legend">
-                <span>❌ — не получено</span>
-                <span>✅ — добыто / раскрыто</span>
-                <span>🎵 все файлы имеют расширение .mp3</span>
-                <span>📀 эффекты: рыбий глаз + плёночные помехи</span>
-            </div>
-            <div>© АУДИОАРХИВ ДЮКА · ДОСТУП ПО СПЕЦКОДУ</div>
-        </div>
+        <div class="chromatic"></div>
+        <div class="tv-glare"></div>
+        <div class="vignette"></div>
     </div>
 </div>
 
 <script>
-    // ========== ПАРОЛЬ И ОСНОВНАЯ ЛОГИКА ==========
     const SECRET_PASSWORD = "детка";
-    let isUnlocked = false;
     let pendingUnlock = false;
-    
+
     const FILES_DATA = [
-        { id: 0, baseName: "допрос с пристрастием", displayBase: "допрос с пристрастием" },
-        { id: 1, baseName: "чистосердечное признание", displayBase: "чистосердечное признание" },
-        { id: 2, baseName: "patriot", displayBase: "patriot" },
-        { id: 3, baseName: "not gay", displayBase: "not gay" },
-        { id: 4, baseName: "black мурин", displayBase: "black мурин" },
-        { id: 5, baseName: "chatEVD", displayBase: "chatEVD" },
-        { id: 6, baseName: "когда сел за особо тяжкое", displayBase: "когда сел за особо тяжкое" },
-        { id: 7, baseName: "rab sistemy", displayBase: "rab sistemy" },
-        { id: 8, baseName: "восьмиклассница", displayBase: "восьмиклассница" },
-        { id: 9, baseName: "nikogda ne/CVETI!", displayBase: "nikogda ne/CVETI!" },
-        { id: 10, baseName: "таков путь", displayBase: "таков путь" }
+        { id: 0, displayBase: "допрос с пристрастием" }, { id: 1, displayBase: "чистосердечное признание" },
+        { id: 2, displayBase: "patriot" }, { id: 3, displayBase: "not gay" }, { id: 4, displayBase: "black мурин" },
+        { id: 5, displayBase: "chatEVD" }, { id: 6, displayBase: "8 let strogo" }, { id: 7, displayBase: "rab sistemy" },
+        { id: 8, displayBase: "восьмиклассница" }, { id: 9, displayBase: "nikogda ne/CVETI!" }, { id: 10, displayBase: "таков путь" }
     ];
-    
     const FILE_EXT = ".mp3";
     const STORAGE_KEY = "duke_files_mp3_status";
     let filesCompleted = new Array(11).fill(false);
-    
-    const accessDeniedBlock = document.getElementById('accessDeniedBlock');
+
+    const accessDenied = document.getElementById('accessDeniedBlock');
     const mainContent = document.getElementById('mainContent');
     const welcomeModal = document.getElementById('welcomeModal');
     const passwordInput = document.getElementById('passwordInput');
     const unlockBtn = document.getElementById('unlockBtn');
     const errorMsg = document.getElementById('errorMsg');
-    const togglePasswordBtn = document.getElementById('togglePasswordBtn');
-    const closeWelcomeBtn = document.getElementById('closeWelcomeBtn');
-    
-    // Показать/скрыть пароль
-    let isPasswordVisible = false;
-    togglePasswordBtn.addEventListener('click', () => {
-        isPasswordVisible = !isPasswordVisible;
-        passwordInput.type = isPasswordVisible ? 'text' : 'password';
-        togglePasswordBtn.textContent = isPasswordVisible ? '🙈' : '👁️';
-    });
-    
+    const toggleBtn = document.getElementById('togglePasswordBtn');
+    const closeWelcome = document.getElementById('closeWelcomeBtn');
+
+    let passVisible = false;
+    toggleBtn.onclick = () => {
+        passVisible = !passVisible;
+        passwordInput.type = passVisible ? 'text' : 'password';
+        toggleBtn.textContent = passVisible ? '🙈' : '👁️';
+    };
+
     function loadState() {
         const saved = localStorage.getItem(STORAGE_KEY);
         if (saved) {
             try {
                 const parsed = JSON.parse(saved);
-                if (Array.isArray(parsed) && parsed.length === 11) {
-                    filesCompleted = parsed.map(v => !!v);
-                } else {
-                    filesCompleted.fill(false);
-                }
-            } catch(e) {
-                filesCompleted.fill(false);
-            }
-        } else {
-            filesCompleted.fill(false);
+                if (parsed.length === 11) filesCompleted = parsed.map(v => !!v);
+            } catch(e) { filesCompleted.fill(false); }
         }
     }
-    
-    function saveState() {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(filesCompleted));
-    }
-    
-    function escapeHtml(str) {
-        return str.replace(/[&<>]/g, function(m) {
-            if (m === '&') return '&amp;';
-            if (m === '<') return '&lt;';
-            if (m === '>') return '&gt;';
-            return m;
-        });
-    }
-    
+    function saveState() { localStorage.setItem(STORAGE_KEY, JSON.stringify(filesCompleted)); }
     function renderList() {
         const container = document.getElementById('filesContainer');
         if (!container) return;
-        let completedCount = 0;
-        for (let i = 0; i < filesCompleted.length; i++) if (filesCompleted[i]) completedCount++;
-        const counterSpan = document.getElementById('progressCounter');
-        if (counterSpan) counterSpan.innerHTML = `ЗАКРЫТО: ${completedCount} / 11`;
-        
+        let completedCount = filesCompleted.filter(v => v).length;
+        document.getElementById('progressCounter').innerHTML = `ЗАКРЫТО: ${completedCount} / 11`;
         let html = '';
         for (let i = 0; i < FILES_DATA.length; i++) {
-            const file = FILES_DATA[i];
-            const isCompleted = filesCompleted[i];
-            const completedClass = isCompleted ? 'completed' : '';
-            const statusMark = isCompleted ? '✅' : '❌';
-            const idxFormatted = (i+1).toString().padStart(2, '0');
-            const fullFileName = `${file.displayBase}${FILE_EXT}`;
+            const f = FILES_DATA[i];
+            const done = filesCompleted[i];
             html += `
-                <div class="file-item ${completedClass}" data-id="${i}">
+                <div class="file-item ${done ? 'completed' : ''}">
                     <div class="file-info">
-                        <span class="file-index">${idxFormatted}</span>
-                        <span class="file-name">${escapeHtml(fullFileName)}</span>
+                        <span class="file-index">${(i+1).toString().padStart(2,'0')}</span>
+                        <span class="file-name">${f.displayBase}${FILE_EXT}</span>
                     </div>
-                    <div style="display: flex; align-items: center; gap: 12px;">
-                        <span class="status-badge">${statusMark}</span>
-                        <button class="toggle-btn" data-id="${i}">${isCompleted ? 'ЗАКРЫТЬ' : 'ОТМЕТИТЬ'}</button>
+                    <div style="display:flex; gap:12px; align-items:center;">
+                        <span class="status-badge">${done ? '✅' : '❌'}</span>
+                        <button class="toggle-btn" data-id="${i}">${done ? 'ЗАКРЫТЬ' : 'ОТМЕТИТЬ'}</button>
                     </div>
                 </div>
             `;
         }
         container.innerHTML = html;
         document.querySelectorAll('.toggle-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const idx = parseInt(btn.getAttribute('data-id'), 10);
-                if (!isNaN(idx) && idx >= 0 && idx < filesCompleted.length) {
-                    filesCompleted[idx] = !filesCompleted[idx];
-                    saveState();
-                    renderList();
-                }
-            });
+            btn.onclick = () => {
+                const idx = parseInt(btn.dataset.id);
+                filesCompleted[idx] = !filesCompleted[idx];
+                saveState();
+                renderList();
+            };
         });
     }
-    
-    function resetAll() {
-        for (let i = 0; i < filesCompleted.length; i++) filesCompleted[i] = false;
-        saveState();
-        renderList();
-    }
-    
-    function updateAprilTimer() {
+    function resetAll() { filesCompleted.fill(false); saveState(); renderList(); }
+    function updateTimer() {
         const now = new Date();
-        let targetYear = now.getFullYear();
-        let targetDate = new Date(targetYear, 3, 1);
-        if (now > targetDate) targetDate = new Date(targetYear + 1, 3, 1);
-        const diffMs = targetDate - now;
-        if (diffMs <= 0) {
-            document.getElementById('days').innerText = '00';
-            document.getElementById('hours').innerText = '00';
-            document.getElementById('minutes').innerText = '00';
-            document.getElementById('seconds').innerText = '00';
-            const statusDiv = document.getElementById('timerStatus');
-            if (statusDiv) statusDiv.innerHTML = '🎉 1 АПРЕЛЯ! ВРЕМЯ РАСПЕЧАТАТЬ АРХИВ 🎉';
+        let target = new Date(now.getFullYear(), 3, 1);
+        if (now > target) target = new Date(now.getFullYear() + 1, 3, 1);
+        const diff = Math.floor((target - now) / 1000);
+        if (diff <= 0) {
+            ['days','hours','minutes','seconds'].forEach(id => document.getElementById(id).innerText = '00');
             return;
         }
-        const totalSeconds = Math.floor(diffMs / 1000);
-        document.getElementById('days').innerText = Math.floor(totalSeconds / 86400).toString().padStart(2, '0');
-        document.getElementById('hours').innerText = Math.floor((totalSeconds % 86400) / 3600).toString().padStart(2, '0');
-        document.getElementById('minutes').innerText = Math.floor((totalSeconds % 3600) / 60).toString().padStart(2, '0');
-        document.getElementById('seconds').innerText = (totalSeconds % 60).toString().padStart(2, '0');
-        const statusDiv = document.getElementById('timerStatus');
-        if (statusDiv) {
-            const daysLeft = Math.floor(totalSeconds / 86400);
-            if (daysLeft === 0) statusDiv.innerHTML = '🔥 МЕНЕЕ СУТОК ДО 1 АПРЕЛЯ! 🔥';
-            else if (daysLeft < 3) statusDiv.innerHTML = '📼 ВСЕГО НЕСКОЛЬКО ДНЕЙ ДО АПРЕЛЬСКОГО РИТУАЛА 📼';
-            else statusDiv.innerHTML = '🎧 ОТСЧЕТ ДО 1 АПРЕЛЯ — КАЖДЫЙ ФАЙЛ .MP3 ЖДЕТ СВОЕГО ЧАСА 🎧';
-        }
+        document.getElementById('days').innerText = Math.floor(diff / 86400).toString().padStart(2,'0');
+        document.getElementById('hours').innerText = Math.floor((diff % 86400) / 3600).toString().padStart(2,'0');
+        document.getElementById('minutes').innerText = Math.floor((diff % 3600) / 60).toString().padStart(2,'0');
+        document.getElementById('seconds').innerText = (diff % 60).toString().padStart(2,'0');
     }
-    
     let timerInterval = null;
-    function startAprilTimer() {
-        updateAprilTimer();
-        if (timerInterval) clearInterval(timerInterval);
-        timerInterval = setInterval(updateAprilTimer, 1000);
-    }
-    
+    function startTimer() { updateTimer(); if (timerInterval) clearInterval(timerInterval); timerInterval = setInterval(updateTimer, 1000); }
+
     function executeUnlock() {
-        isUnlocked = true;
-        accessDeniedBlock.style.display = 'none';
+        accessDenied.style.display = 'none';
         mainContent.style.display = 'block';
         loadState();
         renderList();
-        startAprilTimer();
-        const resetBtn = document.getElementById('resetAllBtn');
-        if (resetBtn) resetBtn.addEventListener('click', () => { if (confirm('⚠️ СБРОСИТЬ ВСЕ ОТМЕТКИ?')) resetAll(); });
+        startTimer();
+        document.getElementById('resetAllBtn').onclick = () => { if(confirm('Сбросить все отметки?')) resetAll(); };
     }
-    
-    function showWelcomeAndUnlock() {
-        welcomeModal.style.display = 'flex';
-        pendingUnlock = true;
-    }
-    
-    function closeWelcomeAndUnlock() {
-        if (pendingUnlock) { executeUnlock(); pendingUnlock = false; }
-        welcomeModal.style.display = 'none';
-    }
-    
+    function showWelcome() { welcomeModal.style.display = 'flex'; pendingUnlock = true; }
+    function closeWelcomeAndUnlock() { if(pendingUnlock) executeUnlock(); welcomeModal.style.display = 'none'; }
+
     function checkPassword() {
         if (passwordInput.value.trim() === SECRET_PASSWORD) {
             errorMsg.innerText = "";
-            showWelcomeAndUnlock();
+            showWelcome();
         } else {
             errorMsg.innerText = "❌ НЕВЕРНЫЙ ПАРОЛЬ. ДОСТУП ЗАПРЕЩЕН.";
             passwordInput.value = "";
-            passwordInput.focus();
         }
     }
-    
-    closeWelcomeBtn.addEventListener('click', closeWelcomeAndUnlock);
-    welcomeModal.addEventListener('click', (e) => { if (e.target === welcomeModal) closeWelcomeAndUnlock(); });
-    unlockBtn.addEventListener('click', checkPassword);
-    passwordInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') checkPassword(); });
-    
-    accessDeniedBlock.style.display = 'block';
+
+    closeWelcome.onclick = closeWelcomeAndUnlock;
+    welcomeModal.onclick = (e) => { if(e.target === welcomeModal) closeWelcomeAndUnlock(); };
+    unlockBtn.onclick = checkPassword;
+    passwordInput.onkeypress = (e) => { if(e.key === 'Enter') checkPassword(); };
+
+    accessDenied.style.display = 'block';
     mainContent.style.display = 'none';
     welcomeModal.style.display = 'none';
-    
-    // ========== ЭФФЕКТ "РЫБИЙ ГЛАЗ" ==========
-    const lens = document.getElementById('fisheyeLens');
-    document.addEventListener('mousemove', (e) => {
-        if (lens) {
-            const x = e.clientX;
-            const y = e.clientY;
-            lens.style.left = x + 'px';
-            lens.style.top = y + 'px';
-            // Добавляем легкую пульсацию при движении
-            lens.style.transform = `translate(-50%, -50%) scale(${1 + Math.sin(Date.now() * 0.008) * 0.03})`;
-        }
-    });
-    
-    // Небольшой дополнительный эффект: линза слегка меняет размер от скролла
-    window.addEventListener('wheel', () => {
-        if (lens) {
-            lens.style.transform = `translate(-50%, -50%) scale(1.12)`;
-            setTimeout(() => {
-                if (lens) lens.style.transform = `translate(-50%, -50%) scale(1)`;
-            }, 150);
-        }
-    });
 </script>
 </body>
 </html>
