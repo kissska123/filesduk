@@ -382,8 +382,12 @@
             justify-content: space-between;
             flex-wrap: wrap;
             gap: 1rem;
+            transition: all 0.2s ease;
         }
-        .file-item.completed { border-left-color: #2c9c4a; background: rgba(30, 50, 35, 0.7); }
+        .file-item.completed { 
+            border-left-color: #2c9c4a; 
+            background: rgba(30, 50, 35, 0.7);
+        }
         .file-info { display: flex; align-items: baseline; gap: 0.8rem; }
         .file-index { font-size: 1.5rem; font-weight: bold; color: #d4af37; }
         .file-name { font-size: 1.2rem; font-weight: 600; color: #ffefb9; }
@@ -435,6 +439,14 @@
             gap: 1.2rem;
             margin-bottom: 0.3rem;
             color: #ddc88a;
+        }
+
+        @keyframes glowPulse {
+            0% { text-shadow: 0 0 2px #ffdd99; }
+            100% { text-shadow: 0 0 10px #ffaa33; }
+        }
+        .just-updated {
+            animation: glowPulse 0.6s ease-out 2;
         }
 
         @media (max-width: 680px) {
@@ -502,7 +514,7 @@
                     </div>
                     <div class="footer-note">
                         <div class="legend">
-                            <span>❌ — не получено</span><span>✅ — добыто</span><span>🎵 .mp3</span><span>
+                            <span>❌ — не получено</span><span>✅ — добыто</span><span>🎵 .mp3</span>
                         </div>
                         <div>© АУДИОАРХИВ ДЮКА</div>
                     </div>
@@ -520,18 +532,28 @@
 </div>
 
 <script>
-    const SECRET_PASSWORD = "детка";
+    const SECRET_PASSWORD = "гилева";
     let pendingUnlock = false;
 
     const FILES_DATA = [
-        { id: 0, displayBase: "допрос с пристрастием" }, { id: 1, displayBase: "чистосердечное признание" },
-        { id: 2, displayBase: "patriot" }, { id: 3, displayBase: "not gay" }, { id: 4, displayBase: "black мурин" },
-        { id: 5, displayBase: "chatEVD" }, { id: 6, displayBase: "когда сел за особо тяжкое" }, { id: 7, displayBase: "rab sistemy" },
-        { id: 8, displayBase: "восьмиклассница" }, { id: 9, displayBase: "nikogda ne/CVETI!" }, { id: 10, displayBase: "таков путь" }
+        { id: 0, displayBase: "допрос с пристрастием" },
+        { id: 1, displayBase: "чистосердечное признание" },
+        { id: 2, displayBase: "patriot" },
+        { id: 3, displayBase: "not gay" },
+        { id: 4, displayBase: "black мурин" },
+        { id: 5, displayBase: "chatEVD" },
+        { id: 6, displayBase: "когда сел за особо тяжкое" },
+        { id: 7, displayBase: "rab sistemy" },
+        { id: 8, displayBase: "восьмиклассница" },
+        { id: 9, displayBase: "nikogda ne/CVETI!" },
+        { id: 10, displayBase: "таков путь" }
     ];
     const FILE_EXT = ".mp3";
     const STORAGE_KEY = "duke_files_mp3_status";
+    
+    // Начальное состояние: только чистосердечное признание (id:1) помечено как закрытое
     let filesCompleted = new Array(11).fill(false);
+    filesCompleted[1] = true;  // чистосердечное признание — уже добыто
 
     const accessDenied = document.getElementById('accessDeniedBlock');
     const mainContent = document.getElementById('mainContent');
@@ -555,22 +577,35 @@
             try {
                 const parsed = JSON.parse(saved);
                 if (parsed.length === 11) filesCompleted = parsed.map(v => !!v);
-            } catch(e) { filesCompleted.fill(false); }
+            } catch(e) { /* сохраняем текущее состояние */ }
         }
     }
-    function saveState() { localStorage.setItem(STORAGE_KEY, JSON.stringify(filesCompleted)); }
+    
+    function saveState() { 
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(filesCompleted)); 
+    }
+    
+    function animateCounter() {
+        const counterEl = document.getElementById('progressCounter');
+        if (counterEl) {
+            counterEl.classList.add('just-updated');
+            setTimeout(() => counterEl.classList.remove('just-updated'), 700);
+        }
+    }
     
     function renderList() {
         const container = document.getElementById('filesContainer');
         if (!container) return;
         let completedCount = filesCompleted.filter(v => v).length;
-        document.getElementById('progressCounter').innerHTML = `ЗАКРЫТО: ${completedCount} / 11`;
+        const counterEl = document.getElementById('progressCounter');
+        if (counterEl) counterEl.innerHTML = `ЗАКРЫТО: ${completedCount} / 11`;
+        
         let html = '';
         for (let i = 0; i < FILES_DATA.length; i++) {
             const f = FILES_DATA[i];
             const done = filesCompleted[i];
             html += `
-                <div class="file-item ${done ? 'completed' : ''}">
+                <div class="file-item ${done ? 'completed' : ''}" data-file-id="${i}">
                     <div class="file-info">
                         <span class="file-index">${(i+1).toString().padStart(2,'0')}</span>
                         <span class="file-name">${f.displayBase}${FILE_EXT}</span>
@@ -583,17 +618,24 @@
             `;
         }
         container.innerHTML = html;
+        
         document.querySelectorAll('.toggle-btn').forEach(btn => {
             btn.onclick = () => {
                 const idx = parseInt(btn.dataset.id);
                 filesCompleted[idx] = !filesCompleted[idx];
                 saveState();
                 renderList();
+                animateCounter();
             };
         });
     }
     
-    function resetAll() { filesCompleted.fill(false); saveState(); renderList(); }
+    function resetAll() { 
+        filesCompleted.fill(false); 
+        saveState(); 
+        renderList(); 
+        animateCounter();
+    }
     
     function updateTimer() {
         const now = new Date();
@@ -623,10 +665,11 @@
     function executeUnlock() {
         accessDenied.style.display = 'none';
         mainContent.style.display = 'block';
-        loadState();
+        loadState();       // подгружаем сохранённое, но если там пусто — останется начальное (1/11)
         renderList();
         startTimer();
         document.getElementById('resetAllBtn').onclick = () => { if(confirm('Сбросить все отметки?')) resetAll(); };
+        animateCounter();
     }
     
     function showWelcome() { welcomeModal.style.display = 'flex'; pendingUnlock = true; }
