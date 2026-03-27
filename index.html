@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>ФАЙЛЫ ДЮКА АРХИВ</title>
     <style>
         * {
@@ -18,7 +18,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 12px;
+            padding: 2rem;
             position: relative;
             overflow-x: hidden;
         }
@@ -35,36 +35,36 @@
         .tv-screen {
             position: relative;
             background: #000;
-            border-radius: 40px / 30px;
+            border-radius: 60px / 40px;
             overflow: hidden;
             box-shadow: 
-                0 0 0 4px #2a2418,
-                0 0 0 8px #1a150e,
-                0 0 0 12px #0c0a06,
-                0 12px 24px rgba(0,0,0,0.6),
-                inset 0 0 30px rgba(0,0,0,0.5);
+                0 0 0 8px #2a2418,
+                0 0 0 12px #1a150e,
+                0 0 0 20px #0c0a06,
+                0 20px 40px rgba(0,0,0,0.8),
+                inset 0 0 50px rgba(0,0,0,0.5);
         }
 
-        /* ИСКРИВЛЕНИЕ "РЫБИЙ ГЛАЗ" — пузатый экран (умеренное для мобильных) */
+        /* ИСКРИВЛЕНИЕ "РЫБИЙ ГЛАЗ" — пузатый экран */
         .tv-content {
             position: relative;
             width: 100%;
-            padding: 16px;
+            padding: 2rem;
             background: radial-gradient(ellipse at center, #0a0f1e 0%, #03060c 100%);
-            transform: scale(1.02);
+            transform: scale(1.1);
             transform-origin: center center;
             animation: barrelPulse 4s ease-in-out infinite;
         }
 
         @keyframes barrelPulse {
             0% {
-                transform: scale(1) perspective(800px) rotateX(0deg) rotateY(0deg);
+                transform: scale(1.02) perspective(800px) rotateX(0deg) rotateY(0deg);
             }
             50% {
-                transform: scale(1.01) perspective(800px) rotateX(0.3deg) rotateY(0.2deg);
+                transform: scale(1.03) perspective(800px) rotateX(0.5deg) rotateY(0.3deg);
             }
             100% {
-                transform: scale(1) perspective(800px) rotateX(0deg) rotateY(0deg);
+                transform: scale(1.02) perspective(800px) rotateX(0deg) rotateY(0deg);
             }
         }
 
@@ -76,7 +76,7 @@
             left: -5%;
             width: 110%;
             height: 110%;
-            background: radial-gradient(circle at 50% 50%, transparent 60%, rgba(0,0,0,0.5) 100%);
+            background: radial-gradient(circle at 50% 50%, transparent 60%, rgba(0,0,0,0.6) 100%);
             pointer-events: none;
             z-index: 5;
         }
@@ -90,7 +90,7 @@
             height: 100%;
             background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDAiIGhlaWdodD0iNDAwIj48ZmlsdGVyIGlkPSJmIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iLjUiIG51bU9jdGF2ZXM9IjMiLz48L2ZpbHRlcj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWx0ZXI9InVybCgjZikiIG9wYWNpdHk9IjAuMjUiLz48L3N2Zz4=');
             background-repeat: repeat;
-            background-size: 80px;
+            background-size: 120px;
             opacity: 0.2;
             pointer-events: none;
             z-index: 10;
@@ -98,8 +98,8 @@
         }
 
         @keyframes grainShift {
-            0% { opacity: 0.12; transform: translate(0, 0); }
-            100% { opacity: 0.22; transform: translate(1%, 1%); }
+            0% { opacity: 0.15; transform: translate(0, 0); }
+            100% { opacity: 0.25; transform: translate(1%, 1%); }
         }
 
         .scanlines {
@@ -108,10 +108,10 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: repeating-linear-gradient(0deg, rgba(0,0,0,0.15) 0px, rgba(0,0,0,0.15) 1px, transparent 1px, transparent 3px);
+            background: repeating-linear-gradient(0deg, rgba(0,0,0,0.2) 0px, rgba(0,0,0,0.2) 2px, transparent 2px, transparent 4px);
             pointer-events: none;
             z-index: 10;
-            animation: scanMove 0.1s linear infinite;
+            animation: scanMove 0.12s linear infinite;
         }
 
         @keyframes scanMove {
@@ -125,15 +125,15 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: repeating-linear-gradient(90deg, rgba(255,200,100,0.02) 0px, rgba(255,200,100,0.02) 2px, transparent 2px, transparent 6px);
-            animation: wobbleEffect 0.2s ease-in-out infinite alternate;
+            background: repeating-linear-gradient(90deg, rgba(255,200,100,0.03) 0px, rgba(255,200,100,0.03) 2px, transparent 2px, transparent 8px);
+            animation: wobbleEffect 0.25s ease-in-out infinite alternate;
             pointer-events: none;
             z-index: 10;
         }
 
         @keyframes wobbleEffect {
-            0% { transform: skewX(0deg); opacity: 0.15; }
-            100% { transform: skewX(0.2deg); opacity: 0.3; }
+            0% { transform: skewX(0deg); opacity: 0.2; }
+            100% { transform: skewX(0.3deg); opacity: 0.4; }
         }
 
         .tv-glare {
@@ -142,7 +142,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(ellipse at 30% 20%, rgba(255,255,220,0.05) 0%, transparent 70%);
+            background: radial-gradient(ellipse at 30% 20%, rgba(255,255,220,0.08) 0%, transparent 70%);
             pointer-events: none;
             z-index: 12;
         }
@@ -153,10 +153,10 @@
             left: 0;
             width: 100%;
             height: 100%;
-            box-shadow: inset 0 0 40px rgba(0,0,0,0.6);
+            box-shadow: inset 0 0 80px rgba(0,0,0,0.7), inset 0 0 30px rgba(0,0,0,0.5);
             pointer-events: none;
             z-index: 11;
-            border-radius: 40px / 30px;
+            border-radius: 60px / 40px;
         }
 
         .chromatic {
@@ -165,7 +165,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle at 50% 50%, transparent 70%, rgba(255,0,0,0.03) 85%, rgba(0,0,255,0.03) 95%);
+            background: radial-gradient(circle at 50% 50%, transparent 60%, rgba(255,0,0,0.05) 80%, rgba(0,0,255,0.05) 95%);
             mix-blend-mode: screen;
             pointer-events: none;
             z-index: 9;
@@ -173,138 +173,93 @@
         }
 
         @keyframes chromaShift {
-            0% { opacity: 0.2; }
-            100% { opacity: 0.5; }
+            0% { opacity: 0.3; }
+            100% { opacity: 0.6; }
         }
 
-        /* Основной контентный блок */
+        /* Основной контентный блок — ВСЕ ТЕКСТЫ ЯРКИЕ */
         .dossier {
             width: 100%;
-            background: rgba(8, 12, 20, 0.88);
+            background: rgba(8, 12, 20, 0.85);
             backdrop-filter: blur(2px);
             border: 1px solid rgba(210, 180, 80, 0.5);
-            border-radius: 1.2rem;
-            box-shadow: 0 0 30px rgba(0,0,0,0.5);
-            padding: 1.2rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 0 40px rgba(0,0,0,0.5);
+            padding: 1.8rem 2rem;
             position: relative;
             z-index: 20;
         }
 
         .header {
             border-bottom: 2px solid #d4af37;
-            margin-bottom: 1rem;
-            padding-bottom: 0.6rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.8rem;
             display: flex;
             justify-content: space-between;
             align-items: flex-end;
             flex-wrap: wrap;
-            gap: 0.5rem;
+            gap: 0.8rem;
         }
 
         .title-main {
-            font-size: 1.4rem;
+            font-size: 2.2rem;
             font-weight: bold;
-            letter-spacing: 2px;
+            letter-spacing: 4px;
             color: #ecd67a;
-            text-shadow: 0 0 4px #a57c1c;
+            text-shadow: 0 0 8px #a57c1c, 0 2px 0 #2c2412;
         }
 
         .stamp {
-            font-size: 0.6rem;
+            font-size: 0.75rem;
             background: #2a2418;
-            padding: 0.2rem 0.6rem;
-            border-radius: 20px;
+            padding: 0.3rem 0.8rem;
+            border-radius: 30px;
             color: #d4af37;
             border: 1px solid #b48c2c;
             font-weight: bold;
         }
 
         .sub {
-            font-size: 0.6rem;
+            font-size: 0.75rem;
             color: #d4bc7a;
-            margin-top: 0.2rem;
+            margin-top: 0.3rem;
+            font-family: monospace;
         }
 
         .access-denied {
             text-align: center;
-            padding: 1.8rem 0.8rem;
+            padding: 3rem 1rem;
         }
 
-        .denied-icon { font-size: 3rem; margin-bottom: 0.6rem; filter: drop-shadow(0 0 4px rgba(255, 0, 0, 0.5)); }
-        .denied-title { font-size: 1.2rem; font-weight: bold; color: #ff8866; letter-spacing: 2px; margin-bottom: 0.8rem; }
-        .denied-message { font-size: 0.75rem; color: #ccaa88; margin-bottom: 1.2rem; }
+        .denied-icon { font-size: 5rem; margin-bottom: 1rem; filter: drop-shadow(0 0 8px rgba(255, 0, 0, 0.5)); }
+        .denied-title { font-size: 2rem; font-weight: bold; color: #ff8866; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 1.5rem; text-shadow: 0 0 5px #c44; }
+        .denied-message { font-size: 1rem; color: #ccaa88; margin-bottom: 2rem; }
 
-        /* ========== ИСПРАВЛЕННЫЙ БЛОК ПАРОЛЯ ДЛЯ ТЕЛЕФОНОВ ========== */
-        .password-form {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.8rem;
-            width: 100%;
-        }
-        .password-input-wrapper {
-            position: relative;
-            width: 100%;
-            max-width: 280px;
-            margin: 0 auto;
-        }
+        .password-input-wrapper { position: relative; display: inline-block; }
         .password-input {
             background: #0a0e16;
             border: 2px solid #d4af37;
-            padding: 0.7rem 2.5rem 0.7rem 1rem;
-            font-size: 0.9rem;
+            padding: 0.8rem 2.8rem 0.8rem 1.5rem;
+            font-size: 1.2rem;
             font-family: monospace;
             color: #ecd67a;
-            border-radius: 2rem;
-            width: 100%;
+            border-radius: 3rem;
+            width: 280px;
             text-align: center;
             outline: none;
-            box-sizing: border-box;
         }
         .toggle-password {
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 1.1rem;
-            color: #d4af37;
-            padding: 0;
-            width: 28px;
-            height: 28px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            transition: 0.2s;
-        }
-        .toggle-password:active {
-            background: rgba(212, 175, 55, 0.2);
+            position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+            background: none; border: none; cursor: pointer; font-size: 1.2rem; color: #d4af37;
         }
         .password-btn {
-            background: #2e2a22;
-            border: 1px solid #d4af37;
-            color: #ffdd99;
-            padding: 0.5rem 1.5rem;
-            border-radius: 2rem;
-            cursor: pointer;
-            font-family: monospace;
-            font-size: 0.85rem;
-            transition: 0.2s;
+            background: #2e2a22; border: 1px solid #d4af37; color: #ffdd99;
+            padding: 0.6rem 2rem; border-radius: 3rem; cursor: pointer;
+            font-family: monospace; font-size: 1rem;
         }
-        .password-btn:active {
-            background: #4a3e2c;
-        }
-        .error-msg {
-            color: #ff8866;
-            font-size: 0.7rem;
-            margin-top: 0.2rem;
-            text-align: center;
-        }
+        .error-msg { color: #ff8866; font-size: 0.8rem; margin-top: 0.5rem; }
 
-        /* Модальное окно */
+        /* ========== МОДАЛЬНОЕ ОКНО — ВСЕ ТЕКСТЫ ЯРКИЕ ========== */
         .welcome-modal {
             display: none; 
             position: fixed; 
@@ -312,142 +267,152 @@
             left: 0; 
             width: 100%; 
             height: 100%;
-            background: rgba(0,0,0,0.96); 
+            background: rgba(0,0,0,0.95); 
             backdrop-filter: blur(8px); 
             z-index: 1000;
             justify-content: center; 
             align-items: center;
-            padding: 1rem;
         }
         .welcome-content {
             background: linear-gradient(135deg, #1a1f2e, #0f1320);
-            border: 2px solid #d4af37;
-            border-radius: 1.5rem;
-            padding: 1.2rem 1.2rem;
+            border: 3px solid #d4af37;
+            border-radius: 2rem;
+            padding: 2rem 2.5rem;
             text-align: center;
-            max-width: 280px;
-            width: 100%;
+            box-shadow: 0 0 60px rgba(212, 175, 55, 0.4);
         }
-        .welcome-icon { font-size: 2.5rem; margin-bottom: 0.5rem; }
+        .welcome-icon { font-size: 4rem; margin-bottom: 1rem; }
         .welcome-text { 
-            font-size: 1.2rem; 
+            font-size: 1.8rem; 
             font-weight: bold; 
             color: #ecd67a; 
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.8rem;
+            text-shadow: 0 0 5px #d4af37;
+            letter-spacing: 1px;
         }
         .welcome-sub { 
-            font-size: 0.8rem; 
+            font-size: 1.1rem; 
             color: #ffdd99; 
-            margin-bottom: 1rem;
+            margin-bottom: 1.8rem;
             border-top: 1px solid #d4af37;
-            padding-top: 0.6rem;
+            padding-top: 0.8rem;
+            font-weight: bold;
         }
         .welcome-btn { 
             background: #d4af37; 
             border: none; 
-            padding: 0.5rem 1.2rem; 
-            border-radius: 2rem; 
+            padding: 0.7rem 2rem; 
+            border-radius: 3rem; 
             cursor: pointer; 
             font-weight: bold; 
-            font-size: 0.9rem;
+            font-size: 1rem;
             color: #1a1f2e;
+            transition: 0.2s;
+        }
+        .welcome-btn:hover {
+            background: #ffdd77;
+            transform: scale(1.02);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.6);
         }
 
         .main-content { display: none; }
         
-        /* Таймер */
+        /* ========== ТАЙМЕР — ЯРКИЙ И ВИДИМЫЙ ========== */
         .timer-section {
             background: rgba(0, 0, 0, 0.6);
-            border-radius: 1rem;
-            padding: 0.6rem 0.8rem;
-            margin-bottom: 1.2rem;
+            border-radius: 1.5rem;
+            padding: 0.8rem 1.2rem;
+            margin-bottom: 1.8rem;
             border: 1px solid #d4af37;
             text-align: center;
         }
         .timer-label {
-            font-size: 0.65rem;
-            letter-spacing: 2px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
             color: #f2dd9f;
-            margin-bottom: 0.4rem;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            text-shadow: 0 0 3px #d4af37;
         }
         .timer-display {
             display: flex;
             justify-content: center;
-            gap: 0.5rem;
+            gap: 1.2rem;
             flex-wrap: wrap;
         }
         .timer-block {
             background: #000000aa;
-            padding: 0.2rem 0.4rem;
-            border-radius: 0.7rem;
-            min-width: 55px;
+            padding: 0.4rem 1rem;
+            border-radius: 1rem;
+            min-width: 80px;
             border: 1px solid #d4af37;
         }
         .timer-number {
-            font-size: 1.2rem;
+            font-size: 2rem;
             font-weight: bold;
             color: #ffdd99;
             line-height: 1;
+            text-shadow: 0 0 8px #ffaa33;
         }
         .timer-unit {
-            font-size: 0.55rem;
+            font-size: 0.7rem;
             color: #ffdd99;
+            letter-spacing: 1px;
         }
         .timer-status {
-            font-size: 0.7rem;
-            margin-top: 0.4rem;
+            font-size: 0.9rem;
+            margin-top: 0.6rem;
             color: #ffdd99;
+            font-weight: bold;
+            text-shadow: 0 0 4px #d4af37;
             background: rgba(0,0,0,0.4);
             display: inline-block;
-            padding: 0.1rem 0.8rem;
-            border-radius: 1rem;
+            padding: 0.2rem 1rem;
+            border-radius: 2rem;
         }
         
-        /* Список файлов */
-        .files-list { display: flex; flex-direction: column; gap: 0.6rem; margin: 1rem 0; }
+        .files-list { display: flex; flex-direction: column; gap: 0.9rem; margin: 1.5rem 0; }
         .file-item {
             background: rgba(0, 0, 0, 0.6);
-            border-left: 4px solid #d4af37;
-            border-radius: 0.8rem;
-            padding: 0.5rem 0.8rem;
+            border-left: 6px solid #d4af37;
+            border-radius: 1rem;
+            padding: 0.7rem 1.2rem;
             display: flex;
             justify-content: space-between;
-            align-items: center;
             flex-wrap: wrap;
-            gap: 0.5rem;
+            gap: 1rem;
+            transition: all 0.2s ease;
         }
         .file-item.completed { 
             border-left-color: #2c9c4a; 
             background: rgba(30, 50, 35, 0.7);
         }
-        .file-info { display: flex; align-items: baseline; gap: 0.5rem; flex-wrap: wrap; }
-        .file-index { font-size: 1rem; font-weight: bold; color: #d4af37; }
-        .file-name { font-size: 0.8rem; font-weight: 600; color: #ffefb9; word-break: break-word; }
-        .status-badge { font-size: 0.9rem; background: #2a2418; padding: 0.1rem 0.5rem; border-radius: 20px; color: #ffdd99; }
+        .file-info { display: flex; align-items: baseline; gap: 0.8rem; }
+        .file-index { font-size: 1.5rem; font-weight: bold; color: #d4af37; }
+        .file-name { font-size: 1.2rem; font-weight: 600; color: #ffefb9; }
+        .status-badge { font-size: 1.2rem; background: #2a2418; padding: 0.2rem 0.8rem; border-radius: 40px; color: #ffdd99; }
         .completed .status-badge { background: #1f4529; color: #a5f0b0; }
         .toggle-btn {
             background: #3a3224; border: 1px solid #d4af37; color: #ffefb9;
-            padding: 0.2rem 0.8rem; border-radius: 1.2rem; cursor: pointer;
-            font-family: monospace; font-size: 0.7rem;
-            white-space: nowrap;
+            padding: 0.3rem 1rem; border-radius: 2rem; cursor: pointer;
+            font-family: monospace; font-size: 0.9rem;
         }
         .stats-panel {
             background: rgba(0, 0, 0, 0.6);
-            border-radius: 1rem;
-            padding: 0.6rem 1rem;
-            margin-top: 0.8rem;
+            border-radius: 1.5rem;
+            padding: 1rem 1.5rem;
+            margin-top: 1.2rem;
             display: flex;
             justify-content: space-between;
-            align-items: center;
             flex-wrap: wrap;
-            gap: 0.6rem;
             border: 1px solid #4a412a;
         }
         .counter {
-            font-size: 0.85rem;
+            font-size: 1.2rem;
             background: #000000aa;
-            padding: 0.2rem 0.8rem;
-            border-radius: 1.5rem;
+            padding: 0.4rem 1rem;
+            border-radius: 2rem;
             color: #ffdd99;
             font-weight: bold;
         }
@@ -455,55 +420,43 @@
             background: #2c2418;
             border: 1px solid #d4af37;
             color: #ffdd99;
-            padding: 0.3rem 0.8rem;
-            border-radius: 1.5rem;
+            padding: 0.5rem 1.2rem;
+            border-radius: 2rem;
             cursor: pointer;
-            font-size: 0.7rem;
+            font-family: monospace;
         }
         .footer-note {
-            margin-top: 1rem;
-            font-size: 0.55rem;
+            margin-top: 1.6rem;
+            font-size: 0.7rem;
             text-align: center;
             color: #c9b16b;
             border-top: 1px dashed #5a4e2e;
-            padding-top: 0.6rem;
+            padding-top: 1rem;
         }
         .legend {
             display: flex;
             justify-content: center;
-            gap: 0.8rem;
-            margin-bottom: 0.2rem;
-            font-size: 0.6rem;
+            gap: 1.2rem;
+            margin-bottom: 0.3rem;
             color: #ddc88a;
         }
 
         @keyframes glowPulse {
             0% { text-shadow: 0 0 2px #ffdd99; }
-            100% { text-shadow: 0 0 8px #ffaa33; }
+            100% { text-shadow: 0 0 10px #ffaa33; }
         }
         .just-updated {
-            animation: glowPulse 0.5s ease-out 2;
+            animation: glowPulse 0.6s ease-out 2;
         }
 
-        /* Дополнительная адаптация для очень узких экранов */
-        @media (max-width: 480px) {
-            .password-input {
-                padding: 0.6rem 2.2rem 0.6rem 0.8rem;
-                font-size: 0.85rem;
-            }
-            .toggle-password {
-                right: 8px;
-                width: 24px;
-                height: 24px;
-                font-size: 1rem;
-            }
-            .password-btn {
-                padding: 0.4rem 1.2rem;
-                font-size: 0.8rem;
-            }
-            .timer-number { font-size: 1rem; }
-            .timer-block { min-width: 45px; }
-            .file-name { font-size: 0.72rem; }
+        @media (max-width: 680px) {
+            .tv-content { padding: 1rem; }
+            .title-main { font-size: 1.5rem; }
+            .file-name { font-size: 0.85rem; }
+            .timer-number { font-size: 1.2rem; }
+            .timer-block { min-width: 55px; }
+            .welcome-text { font-size: 1.2rem; }
+            .welcome-content { padding: 1.5rem; }
         }
     </style>
 </head>
@@ -515,9 +468,9 @@
                 <div class="header">
                     <div>
                         <div class="title-main">ФАЙЛЫ ДЮКА</div>
-                        <div class="sub">▸ АУДИОМАТЕРИАЛЫ ▸ .MP3 ▸ АРХИВ</div>
+                        <div class="sub">▸ АУДИОМАТЕРИАЛЫ ▸ РАСШИРЕНИЕ .MP3 ▸ АРХИВ</div>
                     </div>
-                    <div class="stamp">ДОПУСК жмпиёд -4 ▲</div>
+                    <div class="stamp">ДОПУСК A-1 ▲</div>
                 </div>
 
                 <div id="accessDeniedBlock" class="access-denied">
@@ -539,7 +492,7 @@
                         <div class="welcome-icon">📺</div>
                         <div class="welcome-text">Добро пожаловать, Софья Александровна</div>
                         <div class="welcome-sub">доступ к архиву открыт</div>
-                        <button class="welcome-btn" id="closeWelcomeBtn">ВОЙТИ</button>
+                        <button class="welcome-btn" id="closeWelcomeBtn">ВОЙТИ В АРХИВ</button>
                     </div>
                 </div>
 
@@ -549,15 +502,15 @@
                         <div class="timer-display" id="timerDisplay">
                             <div class="timer-block"><div class="timer-number" id="days">00</div><div class="timer-unit">ДНЕЙ</div></div>
                             <div class="timer-block"><div class="timer-number" id="hours">00</div><div class="timer-unit">ЧАСОВ</div></div>
-                            <div class="timer-block"><div class="timer-number" id="minutes">00</div><div class="timer-unit">МИН</div></div>
-                            <div class="timer-block"><div class="timer-number" id="seconds">00</div><div class="timer-unit">СЕК</div></div>
+                            <div class="timer-block"><div class="timer-number" id="minutes">00</div><div class="timer-unit">МИНУТ</div></div>
+                            <div class="timer-block"><div class="timer-number" id="seconds">00</div><div class="timer-unit">СЕКУНД</div></div>
                         </div>
                         <div class="timer-status" id="timerStatus">⚡ АРХИВ РАЗБЛОКИРОВАН ⚡</div>
                     </div>
                     <div class="files-list" id="filesContainer"></div>
                     <div class="stats-panel">
                         <div class="counter" id="progressCounter">ЗАКРЫТО: 0 / 11</div>
-                        <button class="reset-btn" id="resetAllBtn">⟳ СБРОСИТЬ</button>
+                        <button class="reset-btn" id="resetAllBtn">⟳ СБРОСИТЬ ВСЕ МЕТКИ</button>
                     </div>
                     <div class="footer-note">
                         <div class="legend">
@@ -568,7 +521,7 @@
                 </div>
             </div>
         </div>
-        <!-- Эффекты -->
+        <!-- СЛОИ ЭФФЕКТОВ СТАРОГО ТВ -->
         <div class="grain"></div>
         <div class="scanlines"></div>
         <div class="wobble"></div>
@@ -579,7 +532,7 @@
 </div>
 
 <script>
-    const SECRET_PASSWORD = "детка";
+    const SECRET_PASSWORD = "гилева";
     let pendingUnlock = false;
 
     const FILES_DATA = [
@@ -598,8 +551,9 @@
     const FILE_EXT = ".mp3";
     const STORAGE_KEY = "duke_files_mp3_status";
     
+    // Начальное состояние: только чистосердечное признание (id:1) помечено как закрытое
     let filesCompleted = new Array(11).fill(false);
-    filesCompleted[1] = true;
+    filesCompleted[1] = true;  // чистосердечное признание — уже добыто
 
     const accessDenied = document.getElementById('accessDeniedBlock');
     const mainContent = document.getElementById('mainContent');
@@ -623,7 +577,7 @@
             try {
                 const parsed = JSON.parse(saved);
                 if (parsed.length === 11) filesCompleted = parsed.map(v => !!v);
-            } catch(e) { }
+            } catch(e) { /* сохраняем текущее состояние */ }
         }
     }
     
@@ -656,7 +610,7 @@
                         <span class="file-index">${(i+1).toString().padStart(2,'0')}</span>
                         <span class="file-name">${f.displayBase}${FILE_EXT}</span>
                     </div>
-                    <div style="display:flex; gap:8px; align-items:center;">
+                    <div style="display:flex; gap:12px; align-items:center;">
                         <span class="status-badge">${done ? '✅' : '❌'}</span>
                         <button class="toggle-btn" data-id="${i}">${done ? 'ЗАКРЫТЬ' : 'ОТМЕТИТЬ'}</button>
                     </div>
@@ -690,7 +644,7 @@
         const diff = Math.floor((target - now) / 1000);
         if (diff <= 0) {
             ['days','hours','minutes','seconds'].forEach(id => document.getElementById(id).innerText = '00');
-            document.getElementById('timerStatus').innerHTML = '🎉 1 АПРЕЛЯ! 🎉';
+            document.getElementById('timerStatus').innerHTML = '🎉 1 АПРЕЛЯ! ВРЕМЯ РАСПЕЧАТАТЬ АРХИВ 🎉';
             return;
         }
         document.getElementById('days').innerText = Math.floor(diff / 86400).toString().padStart(2,'0');
@@ -700,9 +654,9 @@
         
         const daysLeft = Math.floor(diff / 86400);
         const statusDiv = document.getElementById('timerStatus');
-        if (daysLeft === 0) statusDiv.innerHTML = '🔥 СЕГОДНЯ 🔥';
-        else if (daysLeft < 3) statusDiv.innerHTML = '📼 МЫ УЗНАЕМ О ВАС ВСЕ 📼';
-        else statusDiv.innerHTML = '🎧 ВЫ ХОТИТЕ УСЛЫШАТЬ ПРАВДУ? 🎧';
+        if (daysLeft === 0) statusDiv.innerHTML = '🔥 МЕНЕЕ СУТОК ДО 1 АПРЕЛЯ! 🔥';
+        else if (daysLeft < 3) statusDiv.innerHTML = '📼 ВСЕГО НЕСКОЛЬКО ДНЕЙ ДО АПРЕЛЬСКОГО РИТУАЛА 📼';
+        else statusDiv.innerHTML = '🎧 ОТСЧЕТ ДО 1 АПРЕЛЯ — КАЖДЫЙ ФАЙЛ .MP3 ЖДЕТ СВОЕГО ЧАСА 🎧';
     }
     
     let timerInterval = null;
@@ -711,7 +665,7 @@
     function executeUnlock() {
         accessDenied.style.display = 'none';
         mainContent.style.display = 'block';
-        loadState();
+        loadState();       // подгружаем сохранённое, но если там пусто — останется начальное (1/11)
         renderList();
         startTimer();
         document.getElementById('resetAllBtn').onclick = () => { if(confirm('Сбросить все отметки?')) resetAll(); };
@@ -726,7 +680,7 @@
             errorMsg.innerText = "";
             showWelcome();
         } else {
-            errorMsg.innerText = "❌ НЕВЕРНЫЙ ПАРОЛЬ";
+            errorMsg.innerText = "❌ НЕВЕРНЫЙ ПАРОЛЬ. ДОСТУП ЗАПРЕЩЕН.";
             passwordInput.value = "";
         }
     }
