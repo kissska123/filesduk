@@ -234,11 +234,24 @@
         .denied-title { font-size: 1.2rem; font-weight: bold; color: #ff8866; letter-spacing: 2px; margin-bottom: 0.8rem; }
         .denied-message { font-size: 0.75rem; color: #ccaa88; margin-bottom: 1.2rem; }
 
-        .password-input-wrapper { position: relative; display: inline-block; width: 100%; max-width: 260px; margin: 0 auto; }
+        /* ========== ИСПРАВЛЕННЫЙ БЛОК ПАРОЛЯ ДЛЯ ТЕЛЕФОНОВ ========== */
+        .password-form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.8rem;
+            width: 100%;
+        }
+        .password-input-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 280px;
+            margin: 0 auto;
+        }
         .password-input {
             background: #0a0e16;
             border: 2px solid #d4af37;
-            padding: 0.6rem 2rem 0.6rem 1rem;
+            padding: 0.7rem 2.5rem 0.7rem 1rem;
             font-size: 0.9rem;
             font-family: monospace;
             color: #ecd67a;
@@ -246,19 +259,50 @@
             width: 100%;
             text-align: center;
             outline: none;
+            box-sizing: border-box;
         }
         .toggle-password {
-            position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
-            background: none; border: none; cursor: pointer; font-size: 1rem; color: #d4af37;
-            padding: 0 4px;
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+            color: #d4af37;
+            padding: 0;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: 0.2s;
+        }
+        .toggle-password:active {
+            background: rgba(212, 175, 55, 0.2);
         }
         .password-btn {
-            background: #2e2a22; border: 1px solid #d4af37; color: #ffdd99;
-            padding: 0.5rem 1.2rem; border-radius: 2rem; cursor: pointer;
-            font-family: monospace; font-size: 0.85rem;
-            margin-top: 0.8rem;
+            background: #2e2a22;
+            border: 1px solid #d4af37;
+            color: #ffdd99;
+            padding: 0.5rem 1.5rem;
+            border-radius: 2rem;
+            cursor: pointer;
+            font-family: monospace;
+            font-size: 0.85rem;
+            transition: 0.2s;
         }
-        .error-msg { color: #ff8866; font-size: 0.7rem; margin-top: 0.5rem; }
+        .password-btn:active {
+            background: #4a3e2c;
+        }
+        .error-msg {
+            color: #ff8866;
+            font-size: 0.7rem;
+            margin-top: 0.2rem;
+            text-align: center;
+        }
 
         /* Модальное окно */
         .welcome-modal {
@@ -441,17 +485,25 @@
             animation: glowPulse 0.5s ease-out 2;
         }
 
-        /* Дополнительная безопасность для очень узких экранов */
+        /* Дополнительная адаптация для очень узких экранов */
         @media (max-width: 480px) {
-            body { padding: 6px; }
-            .tv-content { padding: 10px; }
-            .dossier { padding: 0.9rem; }
-            .title-main { font-size: 1.2rem; }
-            .file-name { font-size: 0.72rem; }
+            .password-input {
+                padding: 0.6rem 2.2rem 0.6rem 0.8rem;
+                font-size: 0.85rem;
+            }
+            .toggle-password {
+                right: 8px;
+                width: 24px;
+                height: 24px;
+                font-size: 1rem;
+            }
+            .password-btn {
+                padding: 0.4rem 1.2rem;
+                font-size: 0.8rem;
+            }
             .timer-number { font-size: 1rem; }
             .timer-block { min-width: 45px; }
-            .toggle-btn { padding: 0.2rem 0.6rem; font-size: 0.65rem; }
-            .password-input { font-size: 0.8rem; padding: 0.5rem 1.8rem 0.5rem 0.8rem; }
+            .file-name { font-size: 0.72rem; }
         }
     </style>
 </head>
@@ -465,7 +517,7 @@
                         <div class="title-main">ФАЙЛЫ ДЮКА</div>
                         <div class="sub">▸ АУДИОМАТЕРИАЛЫ ▸ .MP3 ▸ АРХИВ</div>
                     </div>
-                    <div class="stamp">ДОПУСК A-1 ▲</div>
+                    <div class="stamp">ДОПУСК жмпиёд -4 ▲</div>
                 </div>
 
                 <div id="accessDeniedBlock" class="access-denied">
@@ -527,7 +579,7 @@
 </div>
 
 <script>
-    const SECRET_PASSWORD = "гилева";
+    const SECRET_PASSWORD = "детка";
     let pendingUnlock = false;
 
     const FILES_DATA = [
@@ -648,9 +700,9 @@
         
         const daysLeft = Math.floor(diff / 86400);
         const statusDiv = document.getElementById('timerStatus');
-        if (daysLeft === 0) statusDiv.innerHTML = '🔥 ГОРИТЕ ВСЕ В АДУ! 🔥';
-        else if (daysLeft < 3) statusDiv.innerHTML = '📼 МЫ БУДЕМ ЖДАТЬ ВАС 📼';
-        else statusDiv.innerHTML = '🎧 ВЫ ГОТОВЫ К ЭТОЙ ПРАВДЕ? 🎧';
+        if (daysLeft === 0) statusDiv.innerHTML = '🔥 СЕГОДНЯ 🔥';
+        else if (daysLeft < 3) statusDiv.innerHTML = '📼 МЫ УЗНАЕМ О ВАС ВСЕ 📼';
+        else statusDiv.innerHTML = '🎧 ВЫ ХОТИТЕ УСЛЫШАТЬ ПРАВДУ? 🎧';
     }
     
     let timerInterval = null;
