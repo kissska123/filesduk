@@ -31,7 +31,7 @@
             margin: 0 auto;
         }
 
-        /* ЭКРАН С ЭФФЕКТОМ "БОЧКА" (FISHEYE / BARREL DISTORTION) */
+        /* ЭКРАН С ЭФФЕКТОМ "БОЧКА" */
         .tv-screen {
             position: relative;
             background: #000;
@@ -43,11 +43,9 @@
                 0 0 0 20px #0c0a06,
                 0 20px 40px rgba(0,0,0,0.8),
                 inset 0 0 50px rgba(0,0,0,0.5);
-            transform: scale(1);
-            transition: all 0.2s;
         }
 
-        /* ИСКРИВЛЕНИЕ "РЫБИЙ ГЛАЗ" — через перспективу и трансформацию */
+        /* ИСКРИВЛЕНИЕ "РЫБИЙ ГЛАЗ" — пузатый экран */
         .tv-content {
             position: relative;
             width: 100%;
@@ -56,26 +54,21 @@
             transform: scale(1.02);
             transform-origin: center center;
             animation: barrelPulse 4s ease-in-out infinite;
-            will-change: transform;
         }
 
-        /* Основное искажение — эффект пузатого экрана */
         @keyframes barrelPulse {
             0% {
                 transform: scale(1.02) perspective(800px) rotateX(0deg) rotateY(0deg);
-                filter: brightness(1) contrast(1.05);
             }
             50% {
                 transform: scale(1.03) perspective(800px) rotateX(0.5deg) rotateY(0.3deg);
-                filter: brightness(1.02) contrast(1.08);
             }
             100% {
                 transform: scale(1.02) perspective(800px) rotateX(0deg) rotateY(0deg);
-                filter: brightness(1) contrast(1.05);
             }
         }
 
-        /* Дополнительная деформация краёв (линза) */
+        /* Затемнение по краям */
         .tv-content::before {
             content: "";
             position: absolute;
@@ -86,35 +79,9 @@
             background: radial-gradient(circle at 50% 50%, transparent 60%, rgba(0,0,0,0.6) 100%);
             pointer-events: none;
             z-index: 5;
-            mix-blend-mode: multiply;
         }
 
-        /* Эффект старых ЭЛТ-телевизоров — свечение по углам и растяжка */
-        .tv-content::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.4) 100%);
-            pointer-events: none;
-            z-index: 4;
-        }
-
-        /* АНАЛОГОВЫЕ ПОМЕХИ — ВЕРТИКАЛЬНЫЕ ПОЛОСЫ, ШУМ, БИЕНИЕ */
-        .interference {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 10;
-            mix-blend-mode: overlay;
-        }
-
-        /* Стробоскопический шум (зерно) */
+        /* ========== ЭФФЕКТЫ ПОМЕХ ========== */
         .grain {
             position: absolute;
             top: 0;
@@ -125,6 +92,8 @@
             background-repeat: repeat;
             background-size: 120px;
             opacity: 0.2;
+            pointer-events: none;
+            z-index: 10;
             animation: grainShift 0.2s steps(2) infinite;
         }
 
@@ -133,21 +102,15 @@
             100% { opacity: 0.25; transform: translate(1%, 1%); }
         }
 
-        /* Горизонтальные линии развертки (scanlines) */
         .scanlines {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: repeating-linear-gradient(
-                0deg,
-                rgba(0, 0, 0, 0.2) 0px,
-                rgba(0, 0, 0, 0.2) 2px,
-                transparent 2px,
-                transparent 4px
-            );
+            background: repeating-linear-gradient(0deg, rgba(0,0,0,0.2) 0px, rgba(0,0,0,0.2) 2px, transparent 2px, transparent 4px);
             pointer-events: none;
+            z-index: 10;
             animation: scanMove 0.12s linear infinite;
         }
 
@@ -156,30 +119,23 @@
             100% { transform: translateY(2px); }
         }
 
-        /* "Плавающая" рябь (эффект нагретого кинескопа) */
         .wobble {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: repeating-linear-gradient(
-                90deg,
-                rgba(255, 200, 100, 0.02) 0px,
-                rgba(255, 200, 100, 0.02) 2px,
-                transparent 2px,
-                transparent 8px
-            );
+            background: repeating-linear-gradient(90deg, rgba(255,200,100,0.03) 0px, rgba(255,200,100,0.03) 2px, transparent 2px, transparent 8px);
             animation: wobbleEffect 0.25s ease-in-out infinite alternate;
             pointer-events: none;
+            z-index: 10;
         }
 
         @keyframes wobbleEffect {
-            0% { transform: skewX(0deg) scaleX(1); opacity: 0.2; }
-            100% { transform: skewX(0.3deg) scaleX(1.002); opacity: 0.4; }
+            0% { transform: skewX(0deg); opacity: 0.2; }
+            100% { transform: skewX(0.3deg); opacity: 0.4; }
         }
 
-        /* Блик на стекле телевизора (отражение) */
         .tv-glare {
             position: absolute;
             top: 0;
@@ -189,10 +145,8 @@
             background: radial-gradient(ellipse at 30% 20%, rgba(255,255,220,0.08) 0%, transparent 70%);
             pointer-events: none;
             z-index: 12;
-            mix-blend-mode: screen;
         }
 
-        /* "Горящие" пиксели по краям (vignette + цветное свечение) */
         .vignette {
             position: absolute;
             top: 0;
@@ -205,14 +159,13 @@
             border-radius: 60px / 40px;
         }
 
-        /* Хроматическая аберрация (размытие цветов по краям) */
         .chromatic {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle at 50% 50%, transparent 60%, rgba(255,0,0,0.08) 80%, rgba(0,0,255,0.08) 95%);
+            background: radial-gradient(circle at 50% 50%, transparent 60%, rgba(255,0,0,0.05) 80%, rgba(0,0,255,0.05) 95%);
             mix-blend-mode: screen;
             pointer-events: none;
             z-index: 9;
@@ -220,11 +173,11 @@
         }
 
         @keyframes chromaShift {
-            0% { opacity: 0.3; transform: scale(1); }
-            100% { opacity: 0.6; transform: scale(1.01); }
+            0% { opacity: 0.3; }
+            100% { opacity: 0.6; }
         }
 
-        /* Основной контентный блок */
+        /* Основной контентный блок — ВСЕ ТЕКСТЫ ЯРКИЕ */
         .dossier {
             width: 100%;
             background: rgba(8, 12, 20, 0.85);
@@ -233,9 +186,8 @@
             border-radius: 1.5rem;
             box-shadow: 0 0 40px rgba(0,0,0,0.5);
             padding: 1.8rem 2rem;
-            transition: all 0.2s;
-            z-index: 20;
             position: relative;
+            z-index: 20;
         }
 
         .header {
@@ -269,7 +221,7 @@
 
         .sub {
             font-size: 0.75rem;
-            color: #9b8e5f;
+            color: #d4bc7a;
             margin-top: 0.3rem;
             font-family: monospace;
         }
@@ -280,13 +232,13 @@
         }
 
         .denied-icon { font-size: 5rem; margin-bottom: 1rem; filter: drop-shadow(0 0 8px rgba(255, 0, 0, 0.5)); }
-        .denied-title { font-size: 2rem; font-weight: bold; color: #c44; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 1.5rem; }
-        .denied-message { font-size: 1rem; color: #aa8866; margin-bottom: 2rem; }
+        .denied-title { font-size: 2rem; font-weight: bold; color: #ff8866; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 1.5rem; text-shadow: 0 0 5px #c44; }
+        .denied-message { font-size: 1rem; color: #ccaa88; margin-bottom: 2rem; }
 
         .password-input-wrapper { position: relative; display: inline-block; }
         .password-input {
             background: #0a0e16;
-            border: 2px solid #6a5a3a;
+            border: 2px solid #d4af37;
             padding: 0.8rem 2.8rem 0.8rem 1.5rem;
             font-size: 1.2rem;
             font-family: monospace;
@@ -298,10 +250,10 @@
         }
         .toggle-password {
             position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
-            background: none; border: none; cursor: pointer; font-size: 1.2rem; color: #b8a86b;
+            background: none; border: none; cursor: pointer; font-size: 1.2rem; color: #d4af37;
         }
         .password-btn {
-            background: #2e2a22; border: 1px solid #b98f40; color: #ffdd99;
+            background: #2e2a22; border: 1px solid #d4af37; color: #ffdd99;
             padding: 0.6rem 2rem; border-radius: 3rem; cursor: pointer;
             font-family: monospace; font-size: 1rem;
         }
@@ -317,46 +269,136 @@
             border: 2px solid #d4af37; border-radius: 2rem; padding: 2rem; text-align: center;
         }
         .welcome-text { font-size: 1.6rem; font-weight: bold; color: #ecd67a; margin-bottom: 0.8rem; }
-        .welcome-btn { background: #d4af37; border: none; padding: 0.7rem 2rem; border-radius: 3rem; cursor: pointer; }
+        .welcome-btn { background: #d4af37; border: none; padding: 0.7rem 2rem; border-radius: 3rem; cursor: pointer; font-weight: bold; }
 
         .main-content { display: none; }
+        
+        /* ========== ТАЙМЕР — ЯРКИЙ И ВИДИМЫЙ ========== */
         .timer-section {
-            background: #0b0f18cc; border-radius: 1.5rem; padding: 0.8rem 1.2rem;
-            margin-bottom: 1.8rem; border: 1px solid #5f5333; text-align: center;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 1.5rem;
+            padding: 0.8rem 1.2rem;
+            margin-bottom: 1.8rem;
+            border: 1px solid #d4af37;
+            text-align: center;
         }
-        .timer-display { display: flex; justify-content: center; gap: 1.2rem; flex-wrap: wrap; }
-        .timer-block { background: #00000066; padding: 0.3rem 0.8rem; border-radius: 1rem; min-width: 70px; }
-        .timer-number { font-size: 1.8rem; font-weight: bold; color: #f2dd9f; }
-        .timer-unit { font-size: 0.65rem; color: #bba86b; }
+        .timer-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #f2dd9f;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            text-shadow: 0 0 3px #d4af37;
+        }
+        .timer-display {
+            display: flex;
+            justify-content: center;
+            gap: 1.2rem;
+            flex-wrap: wrap;
+        }
+        .timer-block {
+            background: #000000aa;
+            padding: 0.4rem 1rem;
+            border-radius: 1rem;
+            min-width: 80px;
+            border: 1px solid #d4af37;
+        }
+        .timer-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ffdd99;
+            line-height: 1;
+            text-shadow: 0 0 8px #ffaa33;
+        }
+        .timer-unit {
+            font-size: 0.7rem;
+            color: #ffdd99;
+            letter-spacing: 1px;
+        }
+        .timer-status {
+            font-size: 0.9rem;
+            margin-top: 0.6rem;
+            color: #ffdd99;
+            font-weight: bold;
+            text-shadow: 0 0 4px #d4af37;
+            background: rgba(0,0,0,0.4);
+            display: inline-block;
+            padding: 0.2rem 1rem;
+            border-radius: 2rem;
+        }
+        
         .files-list { display: flex; flex-direction: column; gap: 0.9rem; margin: 1.5rem 0; }
         .file-item {
-            background: rgba(0, 0, 0, 0.55); border-left: 6px solid #b8860b;
-            border-radius: 1rem; padding: 0.7rem 1.2rem;
-            display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem;
+            background: rgba(0, 0, 0, 0.6);
+            border-left: 6px solid #d4af37;
+            border-radius: 1rem;
+            padding: 0.7rem 1.2rem;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
-        .file-item.completed { border-left-color: #2c9c4a; background: rgba(20, 35, 25, 0.7); }
+        .file-item.completed { border-left-color: #2c9c4a; background: rgba(30, 50, 35, 0.7); }
         .file-info { display: flex; align-items: baseline; gap: 0.8rem; }
-        .file-index { font-size: 1.5rem; font-weight: bold; color: #c2a144; }
-        .file-name { font-size: 1.2rem; font-weight: 600; color: #ebddb0; }
-        .status-badge { font-size: 1.2rem; background: #231f1a; padding: 0.2rem 0.8rem; border-radius: 40px; }
+        .file-index { font-size: 1.5rem; font-weight: bold; color: #d4af37; }
+        .file-name { font-size: 1.2rem; font-weight: 600; color: #ffefb9; }
+        .status-badge { font-size: 1.2rem; background: #2a2418; padding: 0.2rem 0.8rem; border-radius: 40px; color: #ffdd99; }
         .completed .status-badge { background: #1f4529; color: #a5f0b0; }
         .toggle-btn {
-            background: #2e2a22; border: none; color: #f0cf7a; font-size: 1.4rem;
+            background: #3a3224; border: 1px solid #d4af37; color: #ffefb9;
             padding: 0.3rem 1rem; border-radius: 2rem; cursor: pointer;
+            font-family: monospace; font-size: 0.9rem;
         }
         .stats-panel {
-            background: #0b0e16b3; border-radius: 1.5rem; padding: 1rem 1.5rem;
-            margin-top: 1.2rem; display: flex; justify-content: space-between; flex-wrap: wrap;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 1.5rem;
+            padding: 1rem 1.5rem;
+            margin-top: 1.2rem;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            border: 1px solid #4a412a;
         }
-        .counter { font-size: 1.2rem; background: #00000066; padding: 0.4rem 1rem; border-radius: 2rem; color: #f2df9e; }
-        .reset-btn { background: #2c2418; border: 1px solid #b98f40; color: #ffdd99; padding: 0.5rem 1.2rem; border-radius: 2rem; cursor: pointer; }
-        .footer-note { margin-top: 1.6rem; font-size: 0.7rem; text-align: center; color: #7c6f46; border-top: 1px dashed #4e462e; padding-top: 1rem; }
-        .legend { display: flex; justify-content: center; gap: 1.2rem; margin-bottom: 0.3rem; }
+        .counter {
+            font-size: 1.2rem;
+            background: #000000aa;
+            padding: 0.4rem 1rem;
+            border-radius: 2rem;
+            color: #ffdd99;
+            font-weight: bold;
+        }
+        .reset-btn {
+            background: #2c2418;
+            border: 1px solid #d4af37;
+            color: #ffdd99;
+            padding: 0.5rem 1.2rem;
+            border-radius: 2rem;
+            cursor: pointer;
+            font-family: monospace;
+        }
+        .footer-note {
+            margin-top: 1.6rem;
+            font-size: 0.7rem;
+            text-align: center;
+            color: #c9b16b;
+            border-top: 1px dashed #5a4e2e;
+            padding-top: 1rem;
+        }
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 1.2rem;
+            margin-bottom: 0.3rem;
+            color: #ddc88a;
+        }
 
         @media (max-width: 680px) {
             .tv-content { padding: 1rem; }
             .title-main { font-size: 1.5rem; }
             .file-name { font-size: 0.85rem; }
+            .timer-number { font-size: 1.2rem; }
+            .timer-block { min-width: 55px; }
         }
     </style>
 </head>
@@ -422,11 +464,9 @@
             </div>
         </div>
         <!-- СЛОИ ЭФФЕКТОВ СТАРОГО ТВ -->
-        <div class="interference">
-            <div class="grain"></div>
-            <div class="scanlines"></div>
-            <div class="wobble"></div>
-        </div>
+        <div class="grain"></div>
+        <div class="scanlines"></div>
+        <div class="wobble"></div>
         <div class="chromatic"></div>
         <div class="tv-glare"></div>
         <div class="vignette"></div>
@@ -473,6 +513,7 @@
         }
     }
     function saveState() { localStorage.setItem(STORAGE_KEY, JSON.stringify(filesCompleted)); }
+    
     function renderList() {
         const container = document.getElementById('filesContainer');
         if (!container) return;
@@ -505,7 +546,9 @@
             };
         });
     }
+    
     function resetAll() { filesCompleted.fill(false); saveState(); renderList(); }
+    
     function updateTimer() {
         const now = new Date();
         let target = new Date(now.getFullYear(), 3, 1);
@@ -513,13 +556,21 @@
         const diff = Math.floor((target - now) / 1000);
         if (diff <= 0) {
             ['days','hours','minutes','seconds'].forEach(id => document.getElementById(id).innerText = '00');
+            document.getElementById('timerStatus').innerHTML = '🎉 1 АПРЕЛЯ! ВРЕМЯ РАСПЕЧАТАТЬ АРХИВ 🎉';
             return;
         }
         document.getElementById('days').innerText = Math.floor(diff / 86400).toString().padStart(2,'0');
         document.getElementById('hours').innerText = Math.floor((diff % 86400) / 3600).toString().padStart(2,'0');
         document.getElementById('minutes').innerText = Math.floor((diff % 3600) / 60).toString().padStart(2,'0');
         document.getElementById('seconds').innerText = (diff % 60).toString().padStart(2,'0');
+        
+        const daysLeft = Math.floor(diff / 86400);
+        const statusDiv = document.getElementById('timerStatus');
+        if (daysLeft === 0) statusDiv.innerHTML = '🔥 МЕНЕЕ СУТОК ДО 1 АПРЕЛЯ! 🔥';
+        else if (daysLeft < 3) statusDiv.innerHTML = '📼 ВСЕГО НЕСКОЛЬКО ДНЕЙ ДО АПРЕЛЬСКОГО РИТУАЛА 📼';
+        else statusDiv.innerHTML = '🎧 ОТСЧЕТ ДО 1 АПРЕЛЯ — КАЖДЫЙ ФАЙЛ .MP3 ЖДЕТ СВОЕГО ЧАСА 🎧';
     }
+    
     let timerInterval = null;
     function startTimer() { updateTimer(); if (timerInterval) clearInterval(timerInterval); timerInterval = setInterval(updateTimer, 1000); }
 
@@ -531,6 +582,7 @@
         startTimer();
         document.getElementById('resetAllBtn').onclick = () => { if(confirm('Сбросить все отметки?')) resetAll(); };
     }
+    
     function showWelcome() { welcomeModal.style.display = 'flex'; pendingUnlock = true; }
     function closeWelcomeAndUnlock() { if(pendingUnlock) executeUnlock(); welcomeModal.style.display = 'none'; }
 
