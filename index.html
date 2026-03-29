@@ -259,8 +259,8 @@
         }
         .error-msg { color: #ff8866; font-size: 0.8rem; margin-top: 0.5rem; }
 
-        /* ========== МОДАЛЬНОЕ ОКНО — ВСЕ ТЕКСТЫ ЯРКИЕ ========== */
-        .welcome-modal {
+        /* ========== НОВАЯ ВСПЛЫВАШКА ========== */
+        .custom-modal {
             display: none; 
             position: fixed; 
             top: 0; 
@@ -273,7 +273,7 @@
             justify-content: center; 
             align-items: center;
         }
-        .welcome-content {
+        .custom-modal-content {
             background: linear-gradient(135deg, #1a1f2e, #0f1320);
             border: 3px solid #d4af37;
             border-radius: 2rem;
@@ -281,8 +281,8 @@
             text-align: center;
             box-shadow: 0 0 60px rgba(212, 175, 55, 0.4);
         }
-        .welcome-icon { font-size: 4rem; margin-bottom: 1rem; }
-        .welcome-text { 
+        .custom-modal-icon { font-size: 4rem; margin-bottom: 1rem; }
+        .custom-modal-text { 
             font-size: 1.8rem; 
             font-weight: bold; 
             color: #ecd67a; 
@@ -290,7 +290,7 @@
             text-shadow: 0 0 5px #d4af37;
             letter-spacing: 1px;
         }
-        .welcome-sub { 
+        .custom-modal-sub { 
             font-size: 1.1rem; 
             color: #ffdd99; 
             margin-bottom: 1.8rem;
@@ -298,7 +298,7 @@
             padding-top: 0.8rem;
             font-weight: bold;
         }
-        .welcome-btn { 
+        .custom-modal-btn { 
             background: #d4af37; 
             border: none; 
             padding: 0.7rem 2rem; 
@@ -309,13 +309,13 @@
             color: #1a1f2e;
             transition: 0.2s;
         }
-        .welcome-btn:hover {
+        .custom-modal-btn:hover {
             background: #ffdd77;
             transform: scale(1.02);
             box-shadow: 0 0 20px rgba(212, 175, 55, 0.6);
         }
 
-        .main-content { display: none; }
+        .main-content { display: block; }
         
         /* ========== ТАЙМЕР — ЯРКИЙ И ВИДИМЫЙ ========== */
         .timer-section {
@@ -455,8 +455,8 @@
             .file-name { font-size: 0.85rem; }
             .timer-number { font-size: 1.2rem; }
             .timer-block { min-width: 55px; }
-            .welcome-text { font-size: 1.2rem; }
-            .welcome-content { padding: 1.5rem; }
+            .custom-modal-text { font-size: 1.2rem; }
+            .custom-modal-content { padding: 1.5rem; }
         }
     </style>
 </head>
@@ -473,7 +473,7 @@
                     <div class="stamp">ДОПУСК A-1 ▲</div>
                 </div>
 
-                <div id="accessDeniedBlock" class="access-denied">
+                <div id="accessDeniedBlock" class="access-denied" style="display: none;">
                     <div class="denied-icon">⛔</div>
                     <div class="denied-title">В ДОСТУПЕ ОТКАЗАНО</div>
                     <div class="denied-message">Для просмотра архивных материалов требуется авторизация</div>
@@ -487,20 +487,19 @@
                     </div>
                 </div>
 
-                <div id="welcomeModal" class="welcome-modal">
-                    <div class="welcome-content">
-                        <div class="welcome-icon">📺</div>
-                        <div class="welcome-text">Добро пожаловать, Софья Александровна</div>
-                        <div class="welcome-sub">доступ к архиву открыт</div>
-                        <button class="welcome-btn" id="closeWelcomeBtn">ВОЙТИ В АРХИВ</button>
+                <div id="customModal" class="custom-modal">
+                    <div class="custom-modal-content">
+                        <div class="custom-modal-icon">📺</div>
+                        <div class="custom-modal-text">АКТ 1 СЕГОДНЯ</div>
+                        <div class="custom-modal-sub">доступ к архиву открыт</div>
+                        <button class="custom-modal-btn" id="closeCustomModalBtn">ВОЙТИ В АРХИВ</button>
                     </div>
                 </div>
 
                 <div id="mainContent" class="main-content">
                     <div class="timer-section">
-                        <div class="timer-label">⏳ ОТСЧЕТ ДО 1 АПРЕЛЯ ⏳</div>
+                        <div class="timer-label">⏳ ДО 18:30 ПО МСК ⏳</div>
                         <div class="timer-display" id="timerDisplay">
-                            <div class="timer-block"><div class="timer-number" id="days">00</div><div class="timer-unit">ДНЕЙ</div></div>
                             <div class="timer-block"><div class="timer-number" id="hours">00</div><div class="timer-unit">ЧАСОВ</div></div>
                             <div class="timer-block"><div class="timer-number" id="minutes">00</div><div class="timer-unit">МИНУТ</div></div>
                             <div class="timer-block"><div class="timer-number" id="seconds">00</div><div class="timer-unit">СЕКУНД</div></div>
@@ -532,8 +531,8 @@
 </div>
 
 <script>
-    const SECRET_PASSWORD = "гилева";
-    let pendingUnlock = false;
+    // Убираем пароль — сразу показываем модалку
+    let pendingUnlock = true;
 
     const FILES_DATA = [
         { id: 0, displayBase: "допрос с пристрастием" },
@@ -551,33 +550,22 @@
     const FILE_EXT = ".mp3";
     const STORAGE_KEY = "duke_files_mp3_status";
     
-    // Начальное состояние: только чистосердечное признание (id:1) помечено как закрытое
     let filesCompleted = new Array(11).fill(false);
     filesCompleted[1] = true;  // чистосердечное признание — уже добыто
 
-    const accessDenied = document.getElementById('accessDeniedBlock');
+    const customModal = document.getElementById('customModal');
+    const closeCustomModalBtn = document.getElementById('closeCustomModalBtn');
     const mainContent = document.getElementById('mainContent');
-    const welcomeModal = document.getElementById('welcomeModal');
-    const passwordInput = document.getElementById('passwordInput');
-    const unlockBtn = document.getElementById('unlockBtn');
-    const errorMsg = document.getElementById('errorMsg');
-    const toggleBtn = document.getElementById('togglePasswordBtn');
-    const closeWelcome = document.getElementById('closeWelcomeBtn');
-
-    let passVisible = false;
-    toggleBtn.onclick = () => {
-        passVisible = !passVisible;
-        passwordInput.type = passVisible ? 'text' : 'password';
-        toggleBtn.textContent = passVisible ? '🙈' : '👁️';
-    };
-
+    const accessDenied = document.getElementById('accessDeniedBlock');
+    
+    // Функции для работы с архивом
     function loadState() {
         const saved = localStorage.getItem(STORAGE_KEY);
         if (saved) {
             try {
                 const parsed = JSON.parse(saved);
                 if (parsed.length === 11) filesCompleted = parsed.map(v => !!v);
-            } catch(e) { /* сохраняем текущее состояние */ }
+            } catch(e) { }
         }
     }
     
@@ -637,62 +625,68 @@
         animateCounter();
     }
     
+    // Новый таймер до 18:30 по МСК
     function updateTimer() {
         const now = new Date();
-        let target = new Date(now.getFullYear(), 3, 1);
-        if (now > target) target = new Date(now.getFullYear() + 1, 3, 1);
-        const diff = Math.floor((target - now) / 1000);
+        // Получаем текущее время в МСК (UTC+3)
+        const mskTime = new Date(now.getTime() + (now.getTimezoneOffset() + 180) * 60000);
+        
+        // Устанавливаем цель на сегодня в 18:30 по МСК
+        let target = new Date(mskTime);
+        target.setHours(18, 30, 0, 0);
+        
+        // Если уже прошло 18:30, цель — завтра
+        if (mskTime > target) {
+            target.setDate(target.getDate() + 1);
+        }
+        
+        const diff = Math.floor((target - mskTime) / 1000);
+        
         if (diff <= 0) {
-            ['days','hours','minutes','seconds'].forEach(id => document.getElementById(id).innerText = '00');
-            document.getElementById('timerStatus').innerHTML = '🎉 1 АПРЕЛЯ! ВРЕМЯ РАСПЕЧАТАТЬ АРХИВ 🎉';
+            document.getElementById('hours').innerText = '00';
+            document.getElementById('minutes').innerText = '00';
+            document.getElementById('seconds').innerText = '00';
+            document.getElementById('timerStatus').innerHTML = '🎉 18:30 НАСТУПИЛО! АРХИВ ОТКРЫТ 🎉';
             return;
         }
-        document.getElementById('days').innerText = Math.floor(diff / 86400).toString().padStart(2,'0');
-        document.getElementById('hours').innerText = Math.floor((diff % 86400) / 3600).toString().padStart(2,'0');
-        document.getElementById('minutes').innerText = Math.floor((diff % 3600) / 60).toString().padStart(2,'0');
-        document.getElementById('seconds').innerText = (diff % 60).toString().padStart(2,'0');
         
-        const daysLeft = Math.floor(diff / 86400);
-        const statusDiv = document.getElementById('timerStatus');
-        if (daysLeft === 0) statusDiv.innerHTML = '🔥 МЕНЕЕ СУТОК ДО 1 АПРЕЛЯ! 🔥';
-        else if (daysLeft < 3) statusDiv.innerHTML = '📼 ВСЕГО НЕСКОЛЬКО ДНЕЙ ДО АПРЕЛЬСКОГО РИТУАЛА 📼';
-        else statusDiv.innerHTML = '🎧 ОТСЧЕТ ДО 1 АПРЕЛЯ — КАЖДЫЙ ФАЙЛ .MP3 ЖДЕТ СВОЕГО ЧАСА 🎧';
+        const hours = Math.floor(diff / 3600);
+        const minutes = Math.floor((diff % 3600) / 60);
+        const seconds = diff % 60;
+        
+        document.getElementById('hours').innerText = hours.toString().padStart(2,'0');
+        document.getElementById('minutes').innerText = minutes.toString().padStart(2,'0');
+        document.getElementById('seconds').innerText = seconds.toString().padStart(2,'0');
+        
+        if (hours === 0 && minutes < 30) {
+            document.getElementById('timerStatus').innerHTML = '🔥 ОТСЧЕТ ПОЧТИ ЗАВЕРШЕН! 🔥';
+        } else {
+            document.getElementById('timerStatus').innerHTML = '⏳ ДО ОТКРЫТИЯ АРХИВА ⏳';
+        }
     }
     
     let timerInterval = null;
     function startTimer() { updateTimer(); if (timerInterval) clearInterval(timerInterval); timerInterval = setInterval(updateTimer, 1000); }
 
     function executeUnlock() {
-        accessDenied.style.display = 'none';
         mainContent.style.display = 'block';
-        loadState();       // подгружаем сохранённое, но если там пусто — останется начальное (1/11)
+        loadState();
         renderList();
         startTimer();
         document.getElementById('resetAllBtn').onclick = () => { if(confirm('Сбросить все отметки?')) resetAll(); };
         animateCounter();
     }
     
-    function showWelcome() { welcomeModal.style.display = 'flex'; pendingUnlock = true; }
-    function closeWelcomeAndUnlock() { if(pendingUnlock) executeUnlock(); welcomeModal.style.display = 'none'; }
+    function showModal() { customModal.style.display = 'flex'; pendingUnlock = true; }
+    function closeModalAndUnlock() { if(pendingUnlock) executeUnlock(); customModal.style.display = 'none'; }
 
-    function checkPassword() {
-        if (passwordInput.value.trim() === SECRET_PASSWORD) {
-            errorMsg.innerText = "";
-            showWelcome();
-        } else {
-            errorMsg.innerText = "❌ НЕВЕРНЫЙ ПАРОЛЬ. ДОСТУП ЗАПРЕЩЕН.";
-            passwordInput.value = "";
-        }
-    }
-
-    closeWelcome.onclick = closeWelcomeAndUnlock;
-    welcomeModal.onclick = (e) => { if(e.target === welcomeModal) closeWelcomeAndUnlock(); };
-    unlockBtn.onclick = checkPassword;
-    passwordInput.onkeypress = (e) => { if(e.key === 'Enter') checkPassword(); };
-
-    accessDenied.style.display = 'block';
+    // Инициализация: скрываем блок с паролем, показываем модалку
+    accessDenied.style.display = 'none';
     mainContent.style.display = 'none';
-    welcomeModal.style.display = 'none';
+    showModal();
+    
+    closeCustomModalBtn.onclick = closeModalAndUnlock;
+    customModal.onclick = (e) => { if(e.target === customModal) closeModalAndUnlock(); };
 </script>
 </body>
 </html>
