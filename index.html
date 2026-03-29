@@ -225,7 +225,7 @@
             margin-top: 0.3rem;
         }
 
-        /* ========== МОДАЛЬНОЕ ОКНО — УВЕЛИЧЕННОЕ ========== */
+        /* ========== МОДАЛЬНОЕ ОКНО — ИСПРАВЛЕНА ВЕРСТКА, НЕ ВЫЛЕЗАЕТ ЗА ПРЕДЕЛЫ ========== */
         .custom-modal {
             display: none; 
             position: fixed; 
@@ -233,60 +233,117 @@
             left: 0; 
             width: 100%; 
             height: 100%;
-            background: rgba(0,0,0,0.97); 
-            backdrop-filter: blur(12px); 
+            background: rgba(0,0,0,0.95); 
+            backdrop-filter: blur(10px); 
             z-index: 1000;
             justify-content: center; 
             align-items: center;
             padding: 20px;
+            /* Плавное появление */
+            animation: modalFadeIn 0.25s ease-out;
         }
+        
+        @keyframes modalFadeIn {
+            from { opacity: 0; backdrop-filter: blur(0px); }
+            to { opacity: 1; backdrop-filter: blur(10px); }
+        }
+        
         .custom-modal-content {
             background: linear-gradient(135deg, #1a1f2e, #0f1320);
             border: 3px solid #d4af37;
             border-radius: 2rem;
-            padding: 2.5rem 3rem;
+            padding: 2rem 2.2rem;
             text-align: center;
-            box-shadow: 0 0 80px rgba(212, 175, 55, 0.5);
-            max-width: 500px;
-            width: 90%;
+            box-shadow: 0 0 60px rgba(212, 175, 55, 0.6);
+            max-width: 520px;
+            width: 100%;
             margin: 0 auto;
+            /* Важно: чтобы контент не выходил за пределы модала */
+            box-sizing: border-box;
+            transition: transform 0.2s ease;
+            position: relative;
         }
+        
+        /* Адаптация для маленьких экранов — уменьшаем отступы и шрифт, но не даем вылезти */
+        @media (max-width: 580px) {
+            .custom-modal-content {
+                padding: 1.5rem 1.2rem;
+                max-width: 94%;
+                border-radius: 1.5rem;
+            }
+            .custom-modal-text {
+                font-size: 1.4rem !important;
+                word-break: break-word;
+            }
+            .custom-modal-sub {
+                font-size: 0.95rem !important;
+                word-break: break-word;
+            }
+            .custom-modal-icon {
+                font-size: 3.2rem !important;
+            }
+            .custom-modal-btn {
+                padding: 0.7rem 1.5rem !important;
+                font-size: 1rem !important;
+            }
+        }
+        
+        @media (max-width: 420px) {
+            .custom-modal-content {
+                padding: 1.2rem 1rem;
+            }
+            .custom-modal-text {
+                font-size: 1.2rem !important;
+            }
+            .custom-modal-sub {
+                font-size: 0.85rem !important;
+            }
+            .custom-modal-icon {
+                font-size: 2.8rem !important;
+            }
+        }
+        
         .custom-modal-icon { 
-            font-size: 5rem; 
-            margin-bottom: 1.2rem; 
+            font-size: 4.5rem; 
+            margin-bottom: 0.8rem; 
+            filter: drop-shadow(0 0 6px #d4af37);
         }
         .custom-modal-text { 
-            font-size: 2rem; 
+            font-size: 1.8rem; 
             font-weight: bold; 
             color: #ecd67a; 
-            margin-bottom: 1rem;
+            margin-bottom: 0.8rem;
             text-shadow: 0 0 8px #d4af37;
             letter-spacing: 2px;
         }
         .custom-modal-sub { 
-            font-size: 1.2rem; 
+            font-size: 1.1rem; 
             color: #ffdd99; 
-            margin-bottom: 2rem;
+            margin-bottom: 1.8rem;
             border-top: 1px solid #d4af37;
-            padding-top: 1rem;
+            padding-top: 0.8rem;
             font-weight: bold;
         }
         .custom-modal-btn { 
             background: #d4af37; 
             border: none; 
-            padding: 0.9rem 2.5rem; 
+            padding: 0.8rem 2rem; 
             border-radius: 3rem; 
             cursor: pointer; 
             font-weight: bold; 
-            font-size: 1.1rem;
+            font-size: 1rem;
             color: #1a1f2e;
             transition: 0.2s;
             font-family: monospace;
+            letter-spacing: 1px;
         }
         .custom-modal-btn:hover {
             background: #ffdd77;
             transform: scale(1.02);
-            box-shadow: 0 0 25px rgba(212, 175, 55, 0.7);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.8);
+        }
+        .custom-modal-btn:active {
+            transform: scale(0.98);
         }
 
         .main-content { display: none; }
@@ -439,10 +496,6 @@
             .tv-content { padding: 16px; }
             .dossier { padding: 1.2rem; }
             .title-main { font-size: 1.4rem; letter-spacing: 2px; }
-            .custom-modal-content { padding: 1.8rem 1.5rem; width: 95%; }
-            .custom-modal-text { font-size: 1.5rem; }
-            .custom-modal-sub { font-size: 1rem; }
-            .custom-modal-icon { font-size: 3.5rem; }
             .timer-number { font-size: 1.6rem; }
             .timer-block { min-width: 65px; }
             .file-name { font-size: 0.9rem; }
@@ -457,6 +510,30 @@
             .timer-block { min-width: 55px; padding: 0.3rem 0.5rem; }
             .timer-number { font-size: 1.3rem; }
             .file-info { gap: 0.5rem; }
+        }
+        
+        /* Доп. защита: никогда не даем модалке вылезти за экран даже на очень узких экранах */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .custom-modal-content {
+                padding: 0.9rem 1.5rem;
+            }
+            .custom-modal-icon {
+                font-size: 2.2rem;
+                margin-bottom: 0.2rem;
+            }
+            .custom-modal-text {
+                font-size: 1.2rem;
+                margin-bottom: 0.2rem;
+            }
+            .custom-modal-sub {
+                font-size: 0.8rem;
+                margin-bottom: 0.8rem;
+                padding-top: 0.4rem;
+            }
+            .custom-modal-btn {
+                padding: 0.4rem 1.2rem;
+                font-size: 0.85rem;
+            }
         }
     </style>
 </head>
@@ -473,6 +550,7 @@
                     <div class="stamp">ДОПУСК A-1 ▲</div>
                 </div>
 
+                <!-- МОДАЛКА: теперь гарантированно не вылезает на компе, корректно позиционирована -->
                 <div id="customModal" class="custom-modal">
                     <div class="custom-modal-content">
                         <div class="custom-modal-icon">📺</div>
@@ -517,7 +595,7 @@
 </div>
 
 <script>
-    // Убираем пароль — сразу показываем модалку
+    // --- ИНИЦИАЛИЗАЦИЯ ---
     let pendingUnlock = true;
 
     const FILES_DATA = [
@@ -537,7 +615,7 @@
     const STORAGE_KEY = "duke_files_mp3_status";
     
     let filesCompleted = new Array(11).fill(false);
-    filesCompleted[1] = true;  // чистосердечное признание — уже добыто
+    filesCompleted[1] = true;  // чистосердечное признание уже добыто
 
     const customModal = document.getElementById('customModal');
     const closeCustomModalBtn = document.getElementById('closeCustomModalBtn');
@@ -548,9 +626,12 @@
         if (saved) {
             try {
                 const parsed = JSON.parse(saved);
-                if (parsed.length === 11) filesCompleted = parsed.map(v => !!v);
-            } catch(e) { }
+                if (parsed && parsed.length === 11) filesCompleted = parsed.map(v => !!v);
+            } catch(e) { console.warn(e); }
         }
+        // если после загрузки первый элемент не соответствует начальному, но сохраняем логику
+        // но у нас всегда по умолчанию второй файл (индекс 1) true, но если в localStorage false, то применим
+        // сохраним синхронность, ничего страшного.
     }
     
     function saveState() { 
@@ -580,7 +661,7 @@
                 <div class="file-item ${done ? 'completed' : ''}" data-file-id="${i}">
                     <div class="file-info">
                         <span class="file-index">${(i+1).toString().padStart(2,'0')}</span>
-                        <span class="file-name">${f.displayBase}${FILE_EXT}</span>
+                        <span class="file-name">${escapeHtml(f.displayBase)}${FILE_EXT}</span>
                     </div>
                     <div style="display:flex; gap:12px; align-items:center;">
                         <span class="status-badge">${done ? '✅' : '❌'}</span>
@@ -592,7 +673,8 @@
         container.innerHTML = html;
         
         document.querySelectorAll('.toggle-btn').forEach(btn => {
-            btn.onclick = () => {
+            btn.onclick = (e) => {
+                e.stopPropagation();
                 const idx = parseInt(btn.dataset.id);
                 filesCompleted[idx] = !filesCompleted[idx];
                 saveState();
@@ -602,16 +684,29 @@
         });
     }
     
-    function resetAll() { 
-        filesCompleted.fill(false); 
-        saveState(); 
-        renderList(); 
-        animateCounter();
+    // вспомогательная функция для экранирования
+    function escapeHtml(str) {
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
     }
     
-    // Таймер до 18:30 по МСК
+    function resetAll() { 
+        if (confirm('⚠️ Сбросить все отметки? Прогресс по файлам будет удалён.')) {
+            filesCompleted.fill(false); 
+            saveState(); 
+            renderList(); 
+            animateCounter();
+        }
+    }
+    
+    // Таймер до 18:30 по МСК (московское время)
     function updateTimer() {
         const now = new Date();
+        // Получаем текущее время в МСК (UTC+3)
         const mskTime = new Date(now.getTime() + (now.getTimezoneOffset() + 180) * 60000);
         
         let target = new Date(mskTime);
@@ -647,26 +742,51 @@
     }
     
     let timerInterval = null;
-    function startTimer() { updateTimer(); if (timerInterval) clearInterval(timerInterval); timerInterval = setInterval(updateTimer, 1000); }
+    function startTimer() { 
+        updateTimer(); 
+        if (timerInterval) clearInterval(timerInterval); 
+        timerInterval = setInterval(updateTimer, 1000); 
+    }
 
     function executeUnlock() {
         mainContent.style.display = 'block';
         loadState();
         renderList();
         startTimer();
-        document.getElementById('resetAllBtn').onclick = () => { if(confirm('Сбросить все отметки?')) resetAll(); };
+        const resetBtn = document.getElementById('resetAllBtn');
+        if (resetBtn) resetBtn.onclick = () => resetAll();
         animateCounter();
     }
     
-    function showModal() { customModal.style.display = 'flex'; pendingUnlock = true; }
-    function closeModalAndUnlock() { if(pendingUnlock) executeUnlock(); customModal.style.display = 'none'; }
+    function showModal() { 
+        customModal.style.display = 'flex'; 
+        pendingUnlock = true; 
+    }
+    
+    function closeModalAndUnlock() { 
+        if (pendingUnlock) {
+            executeUnlock(); 
+            pendingUnlock = false;
+        }
+        customModal.style.display = 'none'; 
+    }
 
-    // Инициализация
+    // СТАРТ: прячем контент, показываем модалку (которая теперь корректно вписана в экран)
     mainContent.style.display = 'none';
     showModal();
     
     closeCustomModalBtn.onclick = closeModalAndUnlock;
-    customModal.onclick = (e) => { if(e.target === customModal) closeModalAndUnlock(); };
+    // Клик по фону модалки — тоже закрывает
+    customModal.onclick = (e) => { 
+        if(e.target === customModal) closeModalAndUnlock(); 
+    };
+    
+    // Дополнительно: если вдруг нажали ESC, тоже закрываем
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && customModal.style.display === 'flex' && pendingUnlock) {
+            closeModalAndUnlock();
+        }
+    });
 </script>
 </body>
 </html>
