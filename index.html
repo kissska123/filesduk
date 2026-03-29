@@ -23,7 +23,6 @@
             overflow-x: hidden;
         }
 
-        /* ========== ОБВЕРТКА ДЛЯ ЭФФЕКТА СТАРОГО ТЕЛЕВИЗОРА ========== */
         .tv-wrapper {
             position: relative;
             width: 100%;
@@ -31,7 +30,6 @@
             margin: 0 auto;
         }
 
-        /* ЭКРАН С ЭФФЕКТОМ "БОЧКА" */
         .tv-screen {
             position: relative;
             background: #000;
@@ -45,7 +43,6 @@
                 inset 0 0 40px rgba(0,0,0,0.5);
         }
 
-        /* ИСКРИВЛЕНИЕ "РЫБИЙ ГЛАЗ" — пузатый экран */
         .tv-content {
             position: relative;
             width: 100%;
@@ -57,18 +54,11 @@
         }
 
         @keyframes barrelPulse {
-            0% {
-                transform: scale(1) perspective(800px) rotateX(0deg) rotateY(0deg);
-            }
-            50% {
-                transform: scale(1.01) perspective(800px) rotateX(0.3deg) rotateY(0.2deg);
-            }
-            100% {
-                transform: scale(1) perspective(800px) rotateX(0deg) rotateY(0deg);
-            }
+            0% { transform: scale(1) perspective(800px) rotateX(0deg) rotateY(0deg); }
+            50% { transform: scale(1.01) perspective(800px) rotateX(0.3deg) rotateY(0.2deg); }
+            100% { transform: scale(1) perspective(800px) rotateX(0deg) rotateY(0deg); }
         }
 
-        /* Затемнение по краям */
         .tv-content::before {
             content: "";
             position: absolute;
@@ -81,7 +71,6 @@
             z-index: 5;
         }
 
-        /* ========== ЭФФЕКТЫ ПОМЕХ ========== */
         .grain {
             position: absolute;
             top: 0;
@@ -177,7 +166,6 @@
             100% { opacity: 0.5; }
         }
 
-        /* Основной контентный блок */
         .dossier {
             width: 100%;
             background: rgba(8, 12, 20, 0.88);
@@ -225,130 +213,79 @@
             margin-top: 0.3rem;
         }
 
-        /* ========== МОДАЛЬНОЕ ОКНО — ИСПРАВЛЕНА ВЕРСТКА, НЕ ВЫЛЕЗАЕТ ЗА ПРЕДЕЛЫ ========== */
+        /* ========== МОДАЛЬНОЕ ОКНО — ПОЛНОСТЬЮ ПЕРЕДЕЛАНО ========== */
         .custom-modal {
-            display: none; 
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.95); 
-            backdrop-filter: blur(10px); 
+            background: rgba(0, 0, 0, 0.96);
+            backdrop-filter: blur(8px);
             z-index: 1000;
-            justify-content: center; 
+            justify-content: center;
             align-items: center;
-            padding: 20px;
-            /* Плавное появление */
-            animation: modalFadeIn 0.25s ease-out;
         }
-        
-        @keyframes modalFadeIn {
-            from { opacity: 0; backdrop-filter: blur(0px); }
-            to { opacity: 1; backdrop-filter: blur(10px); }
-        }
-        
+
         .custom-modal-content {
             background: linear-gradient(135deg, #1a1f2e, #0f1320);
-            border: 3px solid #d4af37;
-            border-radius: 2rem;
-            padding: 2rem 2.2rem;
+            border: 2px solid #d4af37;
+            border-radius: 24px;
+            padding: 24px 32px;
             text-align: center;
-            box-shadow: 0 0 60px rgba(212, 175, 55, 0.6);
-            max-width: 520px;
-            width: 100%;
-            margin: 0 auto;
-            /* Важно: чтобы контент не выходил за пределы модала */
-            box-sizing: border-box;
-            transition: transform 0.2s ease;
-            position: relative;
+            box-shadow: 0 0 50px rgba(212, 175, 55, 0.4);
+            width: auto;
+            min-width: 280px;
+            max-width: 420px;
+            margin: 0 20px;
         }
-        
-        /* Адаптация для маленьких экранов — уменьшаем отступы и шрифт, но не даем вылезти */
-        @media (max-width: 580px) {
-            .custom-modal-content {
-                padding: 1.5rem 1.2rem;
-                max-width: 94%;
-                border-radius: 1.5rem;
-            }
-            .custom-modal-text {
-                font-size: 1.4rem !important;
-                word-break: break-word;
-            }
-            .custom-modal-sub {
-                font-size: 0.95rem !important;
-                word-break: break-word;
-            }
-            .custom-modal-icon {
-                font-size: 3.2rem !important;
-            }
-            .custom-modal-btn {
-                padding: 0.7rem 1.5rem !important;
-                font-size: 1rem !important;
-            }
+
+        .custom-modal-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
         }
-        
-        @media (max-width: 420px) {
-            .custom-modal-content {
-                padding: 1.2rem 1rem;
-            }
-            .custom-modal-text {
-                font-size: 1.2rem !important;
-            }
-            .custom-modal-sub {
-                font-size: 0.85rem !important;
-            }
-            .custom-modal-icon {
-                font-size: 2.8rem !important;
-            }
-        }
-        
-        .custom-modal-icon { 
-            font-size: 4.5rem; 
-            margin-bottom: 0.8rem; 
-            filter: drop-shadow(0 0 6px #d4af37);
-        }
-        .custom-modal-text { 
-            font-size: 1.8rem; 
-            font-weight: bold; 
-            color: #ecd67a; 
-            margin-bottom: 0.8rem;
-            text-shadow: 0 0 8px #d4af37;
+
+        .custom-modal-text {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ecd67a;
+            margin-bottom: 8px;
+            text-shadow: 0 0 4px #d4af37;
             letter-spacing: 2px;
+            white-space: nowrap;
         }
-        .custom-modal-sub { 
-            font-size: 1.1rem; 
-            color: #ffdd99; 
-            margin-bottom: 1.8rem;
+
+        .custom-modal-sub {
+            font-size: 16px;
+            color: #ffdd99;
+            margin-bottom: 24px;
             border-top: 1px solid #d4af37;
-            padding-top: 0.8rem;
+            padding-top: 12px;
             font-weight: bold;
         }
-        .custom-modal-btn { 
-            background: #d4af37; 
-            border: none; 
-            padding: 0.8rem 2rem; 
-            border-radius: 3rem; 
-            cursor: pointer; 
-            font-weight: bold; 
-            font-size: 1rem;
+
+        .custom-modal-btn {
+            background: #d4af37;
+            border: none;
+            padding: 10px 28px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
             color: #1a1f2e;
             transition: 0.2s;
             font-family: monospace;
-            letter-spacing: 1px;
         }
+
         .custom-modal-btn:hover {
             background: #ffdd77;
             transform: scale(1.02);
-            box-shadow: 0 0 20px rgba(212, 175, 55, 0.8);
-        }
-        .custom-modal-btn:active {
-            transform: scale(0.98);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.6);
         }
 
         .main-content { display: none; }
         
-        /* ========== ТАЙМЕР — УВЕЛИЧЕННЫЙ ========== */
         .timer-section {
             background: rgba(0, 0, 0, 0.6);
             border-radius: 1.5rem;
@@ -357,6 +294,7 @@
             border: 1px solid #d4af37;
             text-align: center;
         }
+
         .timer-label {
             font-size: 0.9rem;
             text-transform: uppercase;
@@ -365,12 +303,14 @@
             margin-bottom: 0.6rem;
             font-weight: bold;
         }
+
         .timer-display {
             display: flex;
             justify-content: center;
             gap: 1rem;
             flex-wrap: wrap;
         }
+
         .timer-block {
             background: #000000aa;
             padding: 0.5rem 1rem;
@@ -378,17 +318,20 @@
             min-width: 90px;
             border: 1px solid #d4af37;
         }
+
         .timer-number {
             font-size: 2.2rem;
             font-weight: bold;
             color: #ffdd99;
             line-height: 1;
         }
+
         .timer-unit {
             font-size: 0.75rem;
             color: #ffdd99;
             letter-spacing: 1px;
         }
+
         .timer-status {
             font-size: 1rem;
             margin-top: 0.8rem;
@@ -400,8 +343,8 @@
             border-radius: 2rem;
         }
         
-        /* Список файлов — увеличенный */
         .files-list { display: flex; flex-direction: column; gap: 1rem; margin: 1.8rem 0; }
+        
         .file-item {
             background: rgba(0, 0, 0, 0.6);
             border-left: 5px solid #d4af37;
@@ -413,15 +356,18 @@
             flex-wrap: wrap;
             gap: 1rem;
         }
+
         .file-item.completed { 
             border-left-color: #2c9c4a; 
             background: rgba(30, 50, 35, 0.7);
         }
+
         .file-info { display: flex; align-items: baseline; gap: 1rem; flex-wrap: wrap; }
         .file-index { font-size: 1.4rem; font-weight: bold; color: #d4af37; }
         .file-name { font-size: 1.1rem; font-weight: 600; color: #ffefb9; word-break: break-word; }
         .status-badge { font-size: 1.2rem; background: #2a2418; padding: 0.2rem 0.8rem; border-radius: 40px; color: #ffdd99; }
         .completed .status-badge { background: #1f4529; color: #a5f0b0; }
+        
         .toggle-btn {
             background: #3a3224;
             border: 1px solid #d4af37;
@@ -434,6 +380,7 @@
             font-weight: bold;
             white-space: nowrap;
         }
+
         .stats-panel {
             background: rgba(0, 0, 0, 0.6);
             border-radius: 1.5rem;
@@ -446,6 +393,7 @@
             gap: 1rem;
             border: 1px solid #4a412a;
         }
+
         .counter {
             font-size: 1.2rem;
             background: #000000aa;
@@ -454,6 +402,7 @@
             color: #ffdd99;
             font-weight: bold;
         }
+
         .reset-btn {
             background: #2c2418;
             border: 1px solid #d4af37;
@@ -465,6 +414,7 @@
             font-size: 0.9rem;
             font-weight: bold;
         }
+
         .footer-note {
             margin-top: 1.5rem;
             font-size: 0.75rem;
@@ -473,6 +423,7 @@
             border-top: 1px dashed #5a4e2e;
             padding-top: 1rem;
         }
+
         .legend {
             display: flex;
             justify-content: center;
@@ -486,11 +437,11 @@
             0% { text-shadow: 0 0 2px #ffdd99; }
             100% { text-shadow: 0 0 12px #ffaa33; }
         }
+
         .just-updated {
             animation: glowPulse 0.5s ease-out 2;
         }
 
-        /* Адаптация под телефоны — всё большое и не вылезает */
         @media (max-width: 680px) {
             body { padding: 12px; }
             .tv-content { padding: 16px; }
@@ -503,6 +454,8 @@
             .counter { font-size: 0.95rem; }
             .reset-btn { font-size: 0.8rem; }
             .toggle-btn { font-size: 0.8rem; padding: 0.3rem 1rem; }
+            .custom-modal-text { font-size: 20px !important; white-space: normal !important; }
+            .custom-modal-content { padding: 20px 24px !important; max-width: 340px !important; }
         }
 
         @media (max-width: 480px) {
@@ -510,30 +463,9 @@
             .timer-block { min-width: 55px; padding: 0.3rem 0.5rem; }
             .timer-number { font-size: 1.3rem; }
             .file-info { gap: 0.5rem; }
-        }
-        
-        /* Доп. защита: никогда не даем модалке вылезти за экран даже на очень узких экранах */
-        @media (max-height: 500px) and (orientation: landscape) {
-            .custom-modal-content {
-                padding: 0.9rem 1.5rem;
-            }
-            .custom-modal-icon {
-                font-size: 2.2rem;
-                margin-bottom: 0.2rem;
-            }
-            .custom-modal-text {
-                font-size: 1.2rem;
-                margin-bottom: 0.2rem;
-            }
-            .custom-modal-sub {
-                font-size: 0.8rem;
-                margin-bottom: 0.8rem;
-                padding-top: 0.4rem;
-            }
-            .custom-modal-btn {
-                padding: 0.4rem 1.2rem;
-                font-size: 0.85rem;
-            }
+            .custom-modal-text { font-size: 18px !important; }
+            .custom-modal-sub { font-size: 14px !important; }
+            .custom-modal-icon { font-size: 40px !important; }
         }
     </style>
 </head>
@@ -550,7 +482,6 @@
                     <div class="stamp">ДОПУСК A-1 ▲</div>
                 </div>
 
-                <!-- МОДАЛКА: теперь гарантированно не вылезает на компе, корректно позиционирована -->
                 <div id="customModal" class="custom-modal">
                     <div class="custom-modal-content">
                         <div class="custom-modal-icon">📺</div>
@@ -584,7 +515,6 @@
                 </div>
             </div>
         </div>
-        <!-- СЛОИ ЭФФЕКТОВ СТАРОГО ТВ -->
         <div class="grain"></div>
         <div class="scanlines"></div>
         <div class="wobble"></div>
@@ -595,7 +525,6 @@
 </div>
 
 <script>
-    // --- ИНИЦИАЛИЗАЦИЯ ---
     let pendingUnlock = true;
 
     const FILES_DATA = [
@@ -615,7 +544,7 @@
     const STORAGE_KEY = "duke_files_mp3_status";
     
     let filesCompleted = new Array(11).fill(false);
-    filesCompleted[1] = true;  // чистосердечное признание уже добыто
+    filesCompleted[1] = true;
 
     const customModal = document.getElementById('customModal');
     const closeCustomModalBtn = document.getElementById('closeCustomModalBtn');
@@ -626,12 +555,9 @@
         if (saved) {
             try {
                 const parsed = JSON.parse(saved);
-                if (parsed && parsed.length === 11) filesCompleted = parsed.map(v => !!v);
-            } catch(e) { console.warn(e); }
+                if (parsed.length === 11) filesCompleted = parsed.map(v => !!v);
+            } catch(e) {}
         }
-        // если после загрузки первый элемент не соответствует начальному, но сохраняем логику
-        // но у нас всегда по умолчанию второй файл (индекс 1) true, но если в localStorage false, то применим
-        // сохраним синхронность, ничего страшного.
     }
     
     function saveState() { 
@@ -661,7 +587,7 @@
                 <div class="file-item ${done ? 'completed' : ''}" data-file-id="${i}">
                     <div class="file-info">
                         <span class="file-index">${(i+1).toString().padStart(2,'0')}</span>
-                        <span class="file-name">${escapeHtml(f.displayBase)}${FILE_EXT}</span>
+                        <span class="file-name">${f.displayBase}${FILE_EXT}</span>
                     </div>
                     <div style="display:flex; gap:12px; align-items:center;">
                         <span class="status-badge">${done ? '✅' : '❌'}</span>
@@ -673,8 +599,7 @@
         container.innerHTML = html;
         
         document.querySelectorAll('.toggle-btn').forEach(btn => {
-            btn.onclick = (e) => {
-                e.stopPropagation();
+            btn.onclick = () => {
                 const idx = parseInt(btn.dataset.id);
                 filesCompleted[idx] = !filesCompleted[idx];
                 saveState();
@@ -684,18 +609,8 @@
         });
     }
     
-    // вспомогательная функция для экранирования
-    function escapeHtml(str) {
-        return str.replace(/[&<>]/g, function(m) {
-            if (m === '&') return '&amp;';
-            if (m === '<') return '&lt;';
-            if (m === '>') return '&gt;';
-            return m;
-        });
-    }
-    
     function resetAll() { 
-        if (confirm('⚠️ Сбросить все отметки? Прогресс по файлам будет удалён.')) {
+        if(confirm('Сбросить все отметки?')) {
             filesCompleted.fill(false); 
             saveState(); 
             renderList(); 
@@ -703,10 +618,8 @@
         }
     }
     
-    // Таймер до 18:30 по МСК (московское время)
     function updateTimer() {
         const now = new Date();
-        // Получаем текущее время в МСК (UTC+3)
         const mskTime = new Date(now.getTime() + (now.getTimezoneOffset() + 180) * 60000);
         
         let target = new Date(mskTime);
@@ -742,51 +655,25 @@
     }
     
     let timerInterval = null;
-    function startTimer() { 
-        updateTimer(); 
-        if (timerInterval) clearInterval(timerInterval); 
-        timerInterval = setInterval(updateTimer, 1000); 
-    }
+    function startTimer() { updateTimer(); if (timerInterval) clearInterval(timerInterval); timerInterval = setInterval(updateTimer, 1000); }
 
     function executeUnlock() {
         mainContent.style.display = 'block';
         loadState();
         renderList();
         startTimer();
-        const resetBtn = document.getElementById('resetAllBtn');
-        if (resetBtn) resetBtn.onclick = () => resetAll();
+        document.getElementById('resetAllBtn').onclick = () => resetAll();
         animateCounter();
     }
     
-    function showModal() { 
-        customModal.style.display = 'flex'; 
-        pendingUnlock = true; 
-    }
-    
-    function closeModalAndUnlock() { 
-        if (pendingUnlock) {
-            executeUnlock(); 
-            pendingUnlock = false;
-        }
-        customModal.style.display = 'none'; 
-    }
+    function showModal() { customModal.style.display = 'flex'; pendingUnlock = true; }
+    function closeModalAndUnlock() { if(pendingUnlock) executeUnlock(); customModal.style.display = 'none'; }
 
-    // СТАРТ: прячем контент, показываем модалку (которая теперь корректно вписана в экран)
     mainContent.style.display = 'none';
     showModal();
     
     closeCustomModalBtn.onclick = closeModalAndUnlock;
-    // Клик по фону модалки — тоже закрывает
-    customModal.onclick = (e) => { 
-        if(e.target === customModal) closeModalAndUnlock(); 
-    };
-    
-    // Дополнительно: если вдруг нажали ESC, тоже закрываем
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && customModal.style.display === 'flex' && pendingUnlock) {
-            closeModalAndUnlock();
-        }
-    });
+    customModal.onclick = (e) => { if(e.target === customModal) closeModalAndUnlock(); };
 </script>
 </body>
 </html>
